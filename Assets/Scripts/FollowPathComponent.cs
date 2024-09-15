@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent( typeof( Rigidbody2D ) )]
+[RequireComponent( typeof( VelocityComponent ) )]
 public class FollowPathComponent : MonoBehaviour
 {
 	public Vector2[] targets;
@@ -8,41 +8,25 @@ public class FollowPathComponent : MonoBehaviour
 
 	private int _currentIndex;
 	private bool _isMovingForward = true;
-	private Rigidbody2D _rb2D;
+	private VelocityComponent _moveComponent;
 
 	private void Awake()
 	{
-		_rb2D = GetComponent<Rigidbody2D>();
-		transform.position = targets[ 0 ];
+		_moveComponent = GetComponent<VelocityComponent>();
+		_moveComponent.TargetReached += UpdateCurrentIndex;
+
+		if ( targets.Length > 0 )
+			transform.position = targets[ 0 ];
+
 		_currentIndex = 1;
 	}
 
 	private void FixedUpdate()
 	{
-		if ( IsCurrentTargetReached() )
-		{
-			UpdateCurrentIndex();
-		}
-		MoveToCurrentTarget();
-	}
+		if ( targets.Length == 0 )
+			return;
 
-	private void MoveToCurrentTarget()
-	{
-		Vector2 direction = GetDirectionToCurrentTarget();
-
-		_rb2D.velocity = direction * speed;
-	}
-
-	private Vector2 GetDirectionToCurrentTarget()
-	{
-		Vector2 direction = targets[ _currentIndex ] - ( Vector2 )transform.position;
-		direction.Normalize();
-		return direction;
-	}
-
-	private bool IsCurrentTargetReached()
-	{
-		return Vector2.Distance( transform.position, targets[ _currentIndex ] ) < 0.1f;
+		_moveComponent.SetMovement( targets[ _currentIndex ], speed );
 	}
 
 	//updates the next target to move back and forth all points

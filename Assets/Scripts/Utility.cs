@@ -51,4 +51,17 @@ public static class Utility
 	{
 		rb2D.velocity = Vector2.zero;
 	}
+
+	public static Transform FindParentWithLayer( Transform child, LayerMask mask )
+	{
+		while ( child != null )
+		{
+			if ( ( ( 1 << child.gameObject.layer ) & mask ) != 0 )
+				return child;
+
+			child = child.parent;
+		}
+
+		return null;
+	}
 }

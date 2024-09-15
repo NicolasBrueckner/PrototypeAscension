@@ -73,8 +73,6 @@ public class PlayerJumpController : MonoBehaviour
 
 		if ( _remainingJumps > 0 )
 		{
-			_rb2D.constraints = RigidbodyConstraints2D.None;
-
 			SetJumpForce();
 			OnJumpsChanged( --_remainingJumps );
 		}

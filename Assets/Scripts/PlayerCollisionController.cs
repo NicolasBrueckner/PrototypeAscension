@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Animations;
 using static Utility;
-using constraints = UnityEngine.RigidbodyConstraints2D;
 
 public enum PlayerState
 {
@@ -14,19 +12,18 @@ public enum PlayerState
 
 [RequireComponent( typeof( Collider2D ) )]
 [RequireComponent( typeof( Rigidbody2D ) )]
-[RequireComponent( typeof( PositionConstraint ) )]
 public class PlayerCollisionController : MonoBehaviour
 {
+	public LayerMask compoundMask;
 	public LayerMask groundMask;
 	public LayerMask wallMask;
-	public float wallFreezeTime;
+	public float wallHoldTime;
 
 	public event Action<PlayerState> PlayerStateChanged;
 
 	private PlayerState _currentState;
-	private Coroutine _freezeCoroutine;
+	private Coroutine _holdCoroutine;
 	private Rigidbody2D _rb2D;
-	private PositionConstraint _constraint;
 
 	private InputEventManager _inputEventManager => InputEventManager.Instance;
 
@@ -34,9 +31,8 @@ public class PlayerCollisionController : MonoBehaviour
 	{
 		_currentState = PlayerState.InAir;
 		_rb2D = GetComponent<Rigidbody2D>();
-		_constraint = GetComponent<PositionConstraint>();
 
-		_inputEventManager.JumpCanceled += () => SetConstraints( constraints.None );
+		_inputEventManager.JumpCanceled += () => ToggleHold( false );
 	}
 
 	private void OnCollisionEnter2D( Collision2D collision )
@@ -45,23 +41,36 @@ public class PlayerCollisionController : MonoBehaviour
 
 		if ( IsValidCollision( collisionObject, groundMask ) )
 		{
-			OnPlayerStateChanged( PlayerState.OnGround );
-			SetConstraints( constraints.FreezeAll );
+			HandleCollision( collision, PlayerState.OnGround );
 		}
 
 		else if ( IsValidCollision( collisionObject, wallMask ) )
 		{
-			OnPlayerStateChanged( PlayerState.OnWall );
-			SetConstraints( constraints.FreezeAll );
+			HandleCollision( collision, PlayerState.OnWall );
 
-			_freezeCoroutine ??= StartCoroutine( FreezeCotoutine( collision ) );
+			_holdCoroutine ??= StartCoroutine( FreezeCotoutine( collision ) );
 		}
 	}
 
 	private void OnCollisionExit2D( Collision2D collision )
 	{
 		OnPlayerStateChanged( PlayerState.InAir );
-		SetConstraints( constraints.None );
+	}
+
+	private void HandleCollision( Collision2D collision, PlayerState state )
+	{
+		OnPlayerStateChanged( state );
+		ToggleHold( true );
+		SetParent( collision.gameObject );
+	}
+
+	private void SetParent( GameObject parentObject )
+	{
+		Transform parent = ( parentObject != null )
+			? FindParentWithLayer( parentObject.transform, compoundMask )
+			: null;
+
+		transform.SetParent( parent );
 	}
 
 	private void OnPlayerStateChanged( PlayerState state )
@@ -70,19 +79,28 @@ public class PlayerCollisionController : MonoBehaviour
 		PlayerStateChanged?.Invoke( _currentState );
 	}
 
-	private void SetConstraints( constraints constraints )
+	private void ToggleHold( bool hold )
 	{
-		_rb2D.constraints = constraints;
+		if ( hold )
+		{
+			_rb2D.gravityScale = 0.0f;
+			_rb2D.velocity = Vector3.zero;
+		}
+		else
+		{
+			SetParent( null );
+			_rb2D.gravityScale = 1.0f;
+		}
 	}
 
 	private IEnumerator FreezeCotoutine( Collision2D collision )
 	{
-		yield return new WaitForSeconds( wallFreezeTime );
+		yield return new WaitForSeconds( wallHoldTime );
 
-		SetConstraints( constraints.None );
+		ToggleHold( false );
 		TrySeparateFromCollision( collision );
 
-		_freezeCoroutine = null;
+		_holdCoroutine = null;
 	}
 
 	private void TrySeparateFromCollision( Collision2D collision )
