@@ -2,7 +2,16 @@ using UnityEngine;
 
 public static class Utility
 {
-	public static bool IsValidCollision( GameObject collisionObject, LayerMask mask )
+	public static bool TryValidateCollision(Collision2D collision, LayerMask mask)
+	{
+		GameObject collisionObject= collision.gameObject;
+
+		if(collisionObject)
+			return ValidateCollision(collisionObject, mask);
+
+		return false;
+	}
+	public static bool ValidateCollision( GameObject collisionObject, LayerMask mask )
 	{
 		int collisionLayer = collisionObject.layer;
 		return ( mask.value & ( 1 << collisionLayer ) ) != 0;

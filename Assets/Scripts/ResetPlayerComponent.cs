@@ -12,7 +12,7 @@ public class ResetPlayerComponent : MonoBehaviour
 	{
 		GameObject collisionObject = collision.gameObject;
 
-		if ( IsValidCollision( collisionObject, resetableMask ) )
+		if ( ValidateCollision( collisionObject, resetableMask ) )
 		{
 			ResetPlayer( collisionObject );
 		}

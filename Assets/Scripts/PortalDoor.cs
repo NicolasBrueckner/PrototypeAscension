@@ -23,7 +23,7 @@ public class PortalDoor : MonoBehaviour
 		GameObject collisionObject = collision.gameObject;
 		Rigidbody2D rb2D = collisionObject.GetComponent<Rigidbody2D>();
 
-		if ( IsValidCollision( collisionObject, portableMask ) && rb2D )
+		if ( ValidateCollision( collisionObject, portableMask ) && rb2D )
 		{
 			Teleport( rb2D );
 		}

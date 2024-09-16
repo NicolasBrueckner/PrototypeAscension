@@ -13,7 +13,7 @@ public class BoostPad : MonoBehaviour
 		GameObject collisionObject = collision.gameObject;
 		Rigidbody2D rb2D = collisionObject.GetComponent<Rigidbody2D>();
 
-		if ( IsValidCollision( collisionObject, boostableMask ) && rb2D )
+		if ( ValidateCollision( collisionObject, boostableMask ) && rb2D )
 		{
 			ApplyBoost( rb2D );
 		}
