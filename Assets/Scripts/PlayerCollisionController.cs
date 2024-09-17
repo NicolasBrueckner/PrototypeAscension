@@ -21,39 +21,49 @@ public class PlayerCollisionController : MonoBehaviour
 
 	public event Action<PlayerState> PlayerStateChanged;
 
+	private bool _isColliding;
 	private PlayerState _currentState;
+	private Coroutine _doubleCheckCoroutine;
 	private Coroutine _holdCoroutine;
+	private Collider2D _playerCollider;
 	private Rigidbody2D _rb2D;
 
 	private InputEventManager _inputEventManager => InputEventManager.Instance;
 
 	private void Awake()
 	{
-		_currentState = PlayerState.InAir;
+		_playerCollider = GetComponent<Collider2D>();
 		_rb2D = GetComponent<Rigidbody2D>();
 
-		_inputEventManager.JumpCanceled += () => ToggleHold( false );
+		_inputEventManager.JumpCanceled += OnJumpCanceled;
+	}
+
+	private void Start()
+	{
+		_currentState = PlayerState.InAir;
 	}
 
 	private void OnCollisionEnter2D( Collision2D collision )
 	{
-		GameObject collisionObject = collision.gameObject;
+		_isColliding = true;
 
-		if ( IsValidCollision( collisionObject, groundMask ) )
+		if ( TryValidateCollision( collision, groundMask ) )
 		{
 			HandleCollision( collision, PlayerState.OnGround );
 		}
 
-		else if ( IsValidCollision( collisionObject, wallMask ) )
+		else if ( TryValidateCollision( collision, wallMask ) )
 		{
 			HandleCollision( collision, PlayerState.OnWall );
 
-			_holdCoroutine ??= StartCoroutine( FreezeCotoutine( collision ) );
+			_holdCoroutine ??= StartCoroutine( HoldCoroutine( collision ) );
 		}
 	}
 
 	private void OnCollisionExit2D( Collision2D collision )
 	{
+		_isColliding = false;
+
 		OnPlayerStateChanged( PlayerState.InAir );
 	}
 
@@ -93,14 +103,33 @@ public class PlayerCollisionController : MonoBehaviour
 		}
 	}
 
-	private IEnumerator FreezeCotoutine( Collision2D collision )
+	private IEnumerator HoldCoroutine( Collision2D collision )
 	{
 		yield return new WaitForSeconds( wallHoldTime );
 
-		ToggleHold( false );
-		TrySeparateFromCollision( collision );
+		if ( _isColliding )
+		{
+			ToggleHold( false );
+			TrySeparateFromCollision( collision );
+		}
 
 		_holdCoroutine = null;
+	}
+
+	private IEnumerator DoubleCheckCoroutine()
+	{
+		int frameskip = 2;
+
+		while ( --frameskip >= 0 )
+			yield return new WaitForEndOfFrame();
+
+		if ( _isColliding )
+		{
+			_playerCollider.enabled = false;
+			_playerCollider.enabled = true;
+		}
+
+		_doubleCheckCoroutine = null;
 	}
 
 	private void TrySeparateFromCollision( Collision2D collision )
@@ -116,5 +145,11 @@ public class PlayerCollisionController : MonoBehaviour
 		Vector2 collisionNormal = collision.contacts[ 0 ].normal;
 
 		_rb2D.AddForce( collisionNormal * 0.1f, ForceMode2D.Impulse );
+	}
+
+	private void OnJumpCanceled()
+	{
+		ToggleHold( false );
+		_doubleCheckCoroutine ??= StartCoroutine( DoubleCheckCoroutine() );
 	}
 }
