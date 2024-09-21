@@ -1,6 +1,6 @@
 using UnityEngine;
 
-//[RequireComponent( typeof( BoxCollider2D ) )]
+[RequireComponent( typeof( BoxCollider2D ) )]
 public class Spikes : MonoBehaviour
 {
 	public int amount;

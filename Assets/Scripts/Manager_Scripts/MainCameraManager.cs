@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 using static Utility;
 
@@ -30,5 +31,14 @@ public class MainCameraManager : MonoBehaviour
 		Vector3 smoothedPosition = Vector3.Lerp( transform.position, targetPosition, smoothSpeed * Time.deltaTime );
 
 		transform.position = smoothedPosition;
+	}
+
+	//xMin, xMax, yMin, yMax
+	public float4 GetDimensionsAtDepth( float depth )
+	{
+		Vector3 bottomLeft = _mainCamera.ViewportToWorldPoint( new( 0, 0, depth ) );
+		Vector3 topRight = _mainCamera.ViewportToWorldPoint( new( 1, 1, depth ) );
+
+		return new( bottomLeft.x, topRight.x, bottomLeft.y, topRight.y );
 	}
 }

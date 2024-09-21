@@ -8,7 +8,7 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Post Processing
   - Water
   - UI
   - 
@@ -17,7 +17,7 @@ TagManager:
   - Wall
   - Player
   - CompoundCollision
-  - 
+  - Portal
   - 
   - 
   - 
@@ -38,15 +38,15 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Default
-    uniqueID: 0
-    locked: 0
-  - name: Foreground
-    uniqueID: 2809416395
-    locked: 0
   - name: Background
     uniqueID: 1999628617
     locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0
   - name: BoostPad
     uniqueID: 732324705
+    locked: 0
+  - name: Foreground
+    uniqueID: 2809416395
     locked: 0
