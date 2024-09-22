@@ -1,13 +1,14 @@
+using System;
 using UnityEngine;
 
 public static class Utility
 {
-	public static bool TryValidateCollision(Collision2D collision, LayerMask mask)
+	public static bool TryValidateCollision( Collision2D collision, LayerMask mask )
 	{
-		GameObject collisionObject= collision.gameObject;
+		GameObject collisionObject = collision.gameObject;
 
-		if(collisionObject)
-			return ValidateCollision(collisionObject, mask);
+		if ( collisionObject )
+			return ValidateCollision( collisionObject, mask );
 
 		return false;
 	}
@@ -26,12 +27,12 @@ public static class Utility
 			{
 				instance = gameObject.AddComponent<T>();
 			}
-			Object.DontDestroyOnLoad( gameObject );
+			UnityEngine.Object.DontDestroyOnLoad( gameObject );
 			return instance;
 		}
 		else if ( instance.gameObject != gameObject )
 		{
-			Object.Destroy( gameObject );
+			UnityEngine.Object.Destroy( gameObject );
 		}
 		return instance;
 	}
@@ -72,5 +73,15 @@ public static class Utility
 		}
 
 		return null;
+	}
+
+	public static Vector3[] V2ToV3( Vector2[] array, float z )
+	{
+		return Array.ConvertAll( array, v => new Vector3( v.x, v.y, z ) );
+	}
+
+	public static Vector2[] V3ToV2( Vector3[] array )
+	{
+		return Array.ConvertAll( array, v => new Vector2( v.x, v.y ) );
 	}
 }

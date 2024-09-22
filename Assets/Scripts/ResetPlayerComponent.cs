@@ -1,7 +1,7 @@
 using UnityEngine;
 using static Utility;
 
-[RequireComponent( typeof( BoxCollider2D ) )]
+[RequireComponent( typeof( Collider2D ) )]
 public class ResetPlayerComponent : MonoBehaviour
 {
 	public LayerMask resetableMask;

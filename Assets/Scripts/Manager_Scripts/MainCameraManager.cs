@@ -28,9 +28,18 @@ public class MainCameraManager : MonoBehaviour
 	private void FollowTarget()
 	{
 		Vector3 targetPosition = new( transform.position.x, targetTransform.position.y, -10.0f );
-		Vector3 smoothedPosition = Vector3.Lerp( transform.position, targetPosition, smoothSpeed * Time.deltaTime );
+		Vector3 position;
 
-		transform.position = smoothedPosition;
+		if ( smoothSpeed > 0 )
+		{
+			position = Vector3.Lerp( transform.position, targetPosition, smoothSpeed * Time.deltaTime );
+		}
+		else
+		{
+			position = targetPosition;
+		}
+
+		transform.position = position;
 	}
 
 	//xMin, xMax, yMin, yMax
