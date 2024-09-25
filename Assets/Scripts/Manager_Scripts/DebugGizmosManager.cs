@@ -10,9 +10,9 @@ public class DebugGizmosManager : MonoBehaviour
 	public Color lineColor;
 
 	private InputEventManager _InputEventManager => InputEventManager.Instance;
-	private Vector2 _LinePos1 => playerObject?.transform.position ?? Vector2.zero;
-	private Vector2 _LinePos2 => _InputEventManager?.MousePosition ?? Vector2.zero;
-	private bool _DrawLine => _InputEventManager?.JumpIsPressed ?? false;
+	private Vector2 _LinePos1 => playerObject != null ? playerObject.transform.position : Vector2.zero;
+	private Vector2 _LinePos2 => _InputEventManager != null ? _InputEventManager.MousePosition : Vector2.zero;
+	private bool _DrawLine => _InputEventManager != null && _InputEventManager.JumpIsPressed;
 
 	private void Awake()
 	{

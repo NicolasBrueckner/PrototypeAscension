@@ -5,11 +5,10 @@ using UnityEngine;
 [CustomEditor( typeof( Component ), true )]
 public class PointsComponentEditor : Editor
 {
-	private string _actionName = "Move Point";
+	private readonly string _actionName = "Move Point";
 
 	private void OnSceneGUI()
 	{
-		Debug.Log( "yoyo" );
 		if ( target is FollowPathComponent followPathComponent )
 		{
 			HandlePoints( followPathComponent.targets, pos => followPathComponent.targets = pos );

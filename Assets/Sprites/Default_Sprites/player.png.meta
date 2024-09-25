@@ -120,11 +120,11 @@ TextureImporter:
     weights: []
     secondaryTextures:
     - texture: {fileID: 2800000, guid: 6da39ef5ce7c4ac4eb02b1292ee7a4cc, type: 3}
-      name: EmissionTex
+      name: _EmissionTex
     - texture: {fileID: 2800000, guid: 213e3bc165421f646a946550c03a924d, type: 3}
-      name: HeightTex
+      name: _HeightTex
     - texture: {fileID: 2800000, guid: edae6de5e47f6ea46b364c95764f01a4, type: 3}
-      name: NormalTex
+      name: _NormalTex
     nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

@@ -45,6 +45,7 @@ public class PlayerCollisionController : MonoBehaviour
 
 	private void OnCollisionEnter2D( Collision2D collision )
 	{
+		Debug.Log( "enter" );
 		_isColliding = true;
 
 		if ( TryValidateCollision( collision, groundMask ) )
@@ -62,6 +63,7 @@ public class PlayerCollisionController : MonoBehaviour
 
 	private void OnCollisionExit2D( Collision2D collision )
 	{
+		Debug.Log( "exit" );
 		_isColliding = false;
 
 		OnPlayerStateChanged( PlayerState.InAir );
@@ -118,10 +120,7 @@ public class PlayerCollisionController : MonoBehaviour
 
 	private IEnumerator DoubleCheckCoroutine()
 	{
-		int frameskip = 2;
-
-		while ( --frameskip >= 0 )
-			yield return new WaitForEndOfFrame();
+		yield return new WaitForFixedUpdate();
 
 		if ( _isColliding )
 		{
