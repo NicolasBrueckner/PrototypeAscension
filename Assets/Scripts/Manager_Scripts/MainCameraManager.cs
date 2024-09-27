@@ -9,6 +9,7 @@ public class MainCameraManager : MonoBehaviour
 
 	public Transform targetTransform;
 	public float smoothSpeed;
+	public float offset;
 
 	private Camera _mainCamera;
 
@@ -27,7 +28,7 @@ public class MainCameraManager : MonoBehaviour
 
 	private void FollowTarget()
 	{
-		Vector3 targetPosition = new( transform.position.x, targetTransform.position.y, -10.0f );
+		Vector3 targetPosition = new( transform.position.x, targetTransform.position.y, offset );
 		Vector3 position;
 
 		if ( smoothSpeed > 0 )
