@@ -55,18 +55,19 @@ Material:
     - _BUILTIN_QueueControl: -1
     - _BUILTIN_QueueOffset: 0
     - _Blend: 0
-    - _BlinkingSpeed: 0.002
+    - _BlinkingSpeed: 0.005
     - _CastShadows: 0
     - _Cull: 2
     - _DstBlend: 0
     - _QueueControl: 0
     - _QueueOffset: 0
     - _SrcBlend: 1
-    - _StarsDensity: 100
-    - _StarsPower: 50
+    - _StarsDensity: 111.8
+    - _StarsPower: 54.02
     - _Surface: 0
     - _ZTest: 4
     - _ZWrite: 1
     - _ZWriteControl: 0
-    m_Colors: []
+    m_Colors:
+    - _StarsColor: {r: 0, g: 766.9961, b: 532.63855, a: 0}
   m_BuildTextureStacks: []
