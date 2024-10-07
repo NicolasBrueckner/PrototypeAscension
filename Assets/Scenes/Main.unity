@@ -143,6 +143,14 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 0a67814917864e24a8a7dcdd4bbf8689, type: 2}
+    - target: {fileID: 4065834075238079559, guid: edbdc44b99953484982ff00098a280b6, type: 3}
+      propertyPath: maxEmissionStrength
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5024746870831825654, guid: edbdc44b99953484982ff00098a280b6, type: 3}
+      propertyPath: m_Constraints
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 6269014845461648301, guid: edbdc44b99953484982ff00098a280b6, type: 3}
       propertyPath: jumpNumber
       value: 2
@@ -150,6 +158,10 @@ PrefabInstance:
     - target: {fileID: 6269014845461648301, guid: edbdc44b99953484982ff00098a280b6, type: 3}
       propertyPath: jumpStrength
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6269014845461648301, guid: edbdc44b99953484982ff00098a280b6, type: 3}
+      propertyPath: maxJumpStrength
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7127800111066893550, guid: edbdc44b99953484982ff00098a280b6, type: 3}
       propertyPath: m_LocalScale.x

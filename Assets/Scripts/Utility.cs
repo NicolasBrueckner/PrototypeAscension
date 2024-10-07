@@ -37,7 +37,7 @@ public static class Utility
 		return instance;
 	}
 
-	public static void SetSlowMotion( float value )
+	public static void SetRuntimeSpeed( float value )
 	{
 		Time.timeScale = value;
 		Time.fixedDeltaTime = 0.02f * Time.timeScale;

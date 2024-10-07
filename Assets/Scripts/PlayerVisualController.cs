@@ -1,40 +1,49 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent( typeof( SpriteRenderer ) )]
 [RequireComponent( typeof( PlayerJumpController ) )]
+[RequireComponent( typeof( PlayerCollisionController ) )]
 public class PlayerVisualController : MonoBehaviour
 {
-	private SpriteRenderer _renderer;
-	private PlayerJumpController _jumpController;
-	private Dictionary<int, Color> _colorByRemainingJumps;
+	public float maxEmissionStrength;
+
+	private bool _isInAir;
+	private Coroutine _spinCoroutine;
+	private Rigidbody2D _rb2D;
+	private Material _material;
+	private PlayerJumpController _playerJumpController;
+	private PlayerCollisionController _playerCollisionController;
+
+	private static readonly int EmissionPropertyID = Shader.PropertyToID( "_EmissionFactor" );
 
 	private void Awake()
 	{
-		SetDefaults();
+		_rb2D = GetComponent<Rigidbody2D>();
+		_material = GetComponent<SpriteRenderer>().material;
+		_playerJumpController = GetComponent<PlayerJumpController>();
+		_playerCollisionController = GetComponent<PlayerCollisionController>();
+
+		_playerJumpController.ChargeChanged += OnChargeChanged;
+		_playerCollisionController.PositionStateChanged += OnPositionStateChanged;
 	}
 
-	private void SetDefaults()
+	private void FixedUpdate()
 	{
-		_renderer = GetComponent<SpriteRenderer>();
-		_jumpController = GetComponent<PlayerJumpController>();
-		_jumpController.JumpsChanged += SetPlayerColor;
-
-		InitilizeDictionaries();
+		if ( _isInAir )
+			_rb2D.MoveRotation( _rb2D.rotation + 25f );
 	}
 
-	private void InitilizeDictionaries()
+	//spin when in Air
+	private void OnPositionStateChanged( PlayerState state )
 	{
-		_colorByRemainingJumps = new Dictionary<int, Color>
-		{
-			{ 0, Color.red },
-			{ 1, Color.yellow },
-			{ 2, Color.green },
-		};
+		_isInAir = state == PlayerState.InAir;
+		_rb2D.constraints = _isInAir ? RigidbodyConstraints2D.None : RigidbodyConstraints2D.FreezeRotation;
 	}
 
-	private void SetPlayerColor( int remainingJumps )
+	//brighter when more jump charge
+	private void OnChargeChanged( float emissionFraction )
 	{
-		_renderer.color = _colorByRemainingJumps[ remainingJumps ];
+		_material.SetFloat( EmissionPropertyID, Mathf.Lerp( 1, maxEmissionStrength, emissionFraction ) );
+		Debug.Log( $"Fraction: {emissionFraction}, Property: {_material.GetFloat( EmissionPropertyID )}" );
 	}
 }

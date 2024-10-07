@@ -19,7 +19,7 @@ public class PlayerCollisionController : MonoBehaviour
 	public LayerMask wallMask;
 	public float wallHoldTime;
 
-	public event Action<PlayerState> PlayerStateChanged;
+	public event Action<PlayerState> PositionStateChanged;
 
 	private bool _isColliding;
 	private PlayerState _currentState;
@@ -45,9 +45,23 @@ public class PlayerCollisionController : MonoBehaviour
 
 	private void OnCollisionEnter2D( Collision2D collision )
 	{
-		Debug.Log( "enter" );
-		_isColliding = true;
+		if ( !_isColliding )
+		{
+			_isColliding = true;
 
+			SearchCollisionType( collision );
+		}
+	}
+
+	private void OnCollisionExit2D( Collision2D collision )
+	{
+		_isColliding = false;
+
+		OnPositionStateChanged( PlayerState.InAir );
+	}
+
+	private void SearchCollisionType( Collision2D collision )
+	{
 		if ( TryValidateCollision( collision, groundMask ) )
 		{
 			HandleCollision( collision, PlayerState.OnGround );
@@ -61,34 +75,17 @@ public class PlayerCollisionController : MonoBehaviour
 		}
 	}
 
-	private void OnCollisionExit2D( Collision2D collision )
-	{
-		Debug.Log( "exit" );
-		_isColliding = false;
-
-		OnPlayerStateChanged( PlayerState.InAir );
-	}
-
 	private void HandleCollision( Collision2D collision, PlayerState state )
 	{
-		OnPlayerStateChanged( state );
+		OnPositionStateChanged( state );
 		ToggleHold( true );
 		SetParent( collision.gameObject );
 	}
 
-	private void SetParent( GameObject parentObject )
-	{
-		Transform parent = ( parentObject != null )
-			? FindParentWithLayer( parentObject.transform, compoundMask )
-			: null;
-
-		transform.SetParent( parent );
-	}
-
-	private void OnPlayerStateChanged( PlayerState state )
+	private void OnPositionStateChanged( PlayerState state )
 	{
 		_currentState = state;
-		PlayerStateChanged?.Invoke( _currentState );
+		PositionStateChanged?.Invoke( _currentState );
 	}
 
 	private void ToggleHold( bool hold )
@@ -105,6 +102,15 @@ public class PlayerCollisionController : MonoBehaviour
 		}
 	}
 
+	private void SetParent( GameObject parentObject )
+	{
+		Transform parent = ( parentObject != null )
+			? FindParentWithLayer( parentObject.transform, compoundMask )
+			: null;
+
+		transform.SetParent( parent );
+	}
+
 	private IEnumerator HoldCoroutine( Collision2D collision )
 	{
 		yield return new WaitForSeconds( wallHoldTime );
@@ -112,7 +118,7 @@ public class PlayerCollisionController : MonoBehaviour
 		if ( _isColliding )
 		{
 			ToggleHold( false );
-			TrySeparateFromCollision( collision );
+			SeparateFromCollision( collision );
 		}
 
 		_holdCoroutine = null;
@@ -131,16 +137,11 @@ public class PlayerCollisionController : MonoBehaviour
 		_doubleCheckCoroutine = null;
 	}
 
-	private void TrySeparateFromCollision( Collision2D collision )
+	private void SeparateFromCollision( Collision2D collision )
 	{
 		if ( collision.contacts.Length == 0 )
 			return;
 
-		SeparateFromCollision( collision );
-	}
-
-	private void SeparateFromCollision( Collision2D collision )
-	{
 		Vector2 collisionNormal = collision.contacts[ 0 ].normal;
 
 		_rb2D.AddForce( collisionNormal * 0.1f, ForceMode2D.Impulse );

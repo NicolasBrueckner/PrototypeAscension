@@ -418,7 +418,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "03d249b0733647fc89bd31326e506ec0",
     "m_Id": 0,
-    "m_DisplayName": "EmissionFaktor",
+    "m_DisplayName": "EmissionFactor",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -1893,10 +1893,10 @@
     "m_Guid": {
         "m_GuidSerialized": "9ee05d21-d28d-49ed-b248-5bb24b047a01"
     },
-    "m_Name": "EmissionFaktor",
+    "m_Name": "EmissionFactor",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "EmissionFaktor",
-    "m_DefaultReferenceName": "_EmissionFaktor",
+    "m_RefNameGeneratedByDisplayName": "EmissionFactor",
+    "m_DefaultReferenceName": "_EmissionFactor",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using static Utility;
 
@@ -7,13 +8,17 @@ using static Utility;
 public class PlayerJumpController : MonoBehaviour
 {
 	public int jumpNumber;
-	public float jumpStrength;
+	public float maxJumpStrength;
 
-	public event Action<int> JumpsChanged;
+	public event Action<float> ChargeChanged;
 
 	private int _remainingJumps;
+	private bool _isCharging;
 	private bool _isJumpStopped;
+	private float _currentJumpStrength;
 	private Vector2 _mousePosition;
+	private PlayerState _currentState;
+	private Coroutine _chargeJumpCoroutine;
 	private Rigidbody2D _rb2D;
 	private PlayerCollisionController _playerCollisionController;
 
@@ -27,7 +32,7 @@ public class PlayerJumpController : MonoBehaviour
 		_playerCollisionController = GetComponent<PlayerCollisionController>();
 
 		_InputEventManager.InputsBound += BindInputEvents;
-		_playerCollisionController.PlayerStateChanged += OnPlayerStateChanged;
+		_playerCollisionController.PositionStateChanged += OnPlayerStateChanged;
 	}
 	#endregion
 
@@ -40,33 +45,36 @@ public class PlayerJumpController : MonoBehaviour
 
 	private void OnPlayerStateChanged( PlayerState state )
 	{
-		switch ( state )
+		_currentState = state;
+
+		switch ( _currentState )
 		{
 			case PlayerState.OnGround:
 				_remainingJumps = jumpNumber;
-				OnJumpsChanged( _remainingJumps );
 				break;
 			case PlayerState.OnWall:
 				break;
 			case PlayerState.InAir:
 				if ( _remainingJumps == jumpNumber )
-				{
 					_remainingJumps = jumpNumber - 1;
-					OnJumpsChanged( _remainingJumps );
-				}
 				break;
 		}
 	}
 
 	private void OnJumpPerformed()
 	{
-		SetSlowMotion( 0.3f );
+		_isCharging = true;
 		_isJumpStopped = false;
+
+		SetRuntimeSpeed( 0.3f );
+		_chargeJumpCoroutine ??= StartCoroutine( ChargeJumpCoroutine() );
 	}
 
 	private void OnJumpCanceled()
 	{
-		SetSlowMotion( 1.0f );
+		SetRuntimeSpeed( 1.0f );
+		_isCharging = false;
+		OnChargeChanged( 0.0f );
 
 		if ( _isJumpStopped )
 			return;
@@ -74,7 +82,7 @@ public class PlayerJumpController : MonoBehaviour
 		if ( _remainingJumps > 0 )
 		{
 			SetJumpForce();
-			OnJumpsChanged( --_remainingJumps );
+			_remainingJumps--;
 		}
 	}
 
@@ -86,7 +94,7 @@ public class PlayerJumpController : MonoBehaviour
 	private void SetJumpForce()
 	{
 		Vector2 direction = SetJumpDirection();
-		Vector2 velocity = direction * jumpStrength;
+		Vector2 velocity = direction * _currentJumpStrength;
 
 		_rb2D.velocity = velocity;
 	}
@@ -99,9 +107,26 @@ public class PlayerJumpController : MonoBehaviour
 		return direction;
 	}
 
-	public void OnJumpsChanged( int value )
+	private IEnumerator ChargeJumpCoroutine()
 	{
-		JumpsChanged?.Invoke( value );
+		_currentJumpStrength = 0;
+
+		while ( _isCharging )
+		{
+			_currentJumpStrength += 20f * Time.fixedDeltaTime;
+			_currentJumpStrength = Mathf.Min( _currentJumpStrength, maxJumpStrength );
+
+			OnChargeChanged( _currentJumpStrength / maxJumpStrength );
+
+			yield return new WaitForFixedUpdate();
+		}
+
+		_chargeJumpCoroutine = null;
+	}
+
+	private void OnChargeChanged( float fraction )
+	{
+		ChargeChanged?.Invoke( fraction );
 	}
 
 	public void StopJump()
