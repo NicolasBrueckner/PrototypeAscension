@@ -11,18 +11,21 @@ public class PointsComponentEditor : Editor
 	{
 		if ( target is FollowPathComponent followPathComponent )
 		{
-			HandlePoints( followPathComponent.targets, pos => followPathComponent.targets = pos );
+			Transform transform = followPathComponent.transform;
+			Vector2[] localPoints = CoordinateSpaceConversion( followPathComponent.targets, transform, true );
+			HandlePoints( localPoints, pos => followPathComponent.targets = CoordinateSpaceConversion( pos, transform, false ) );
 		}
 		else if ( target is LaserComponent laserComponent )
 		{
-			HandlePoints( laserComponent.points, pos => laserComponent.points = pos );
+			Transform transform = laserComponent.transform;
+			Vector2[] localPoints = CoordinateSpaceConversion( laserComponent.points, transform, true );
+			HandlePoints( localPoints, pos => laserComponent.points = CoordinateSpaceConversion( pos, transform, false ) );
 			laserComponent.UpdateLaser();
 		}
 	}
 
 	private void HandlePoints( Vector2[] points, Action<Vector2[]> setPoints )
 	{
-
 		if ( points == null || points.Length == 0 )
 			return;
 
@@ -60,5 +63,17 @@ public class PointsComponentEditor : Editor
 			size,
 			Vector3.zero,
 			Handles.CircleHandleCap );
+	}
+
+	private Vector2[] CoordinateSpaceConversion( Vector2[] points, Transform transform, bool toLocal )
+	{
+		Vector2[] transformedPoints = new Vector2[ points.Length ];
+
+		for ( int i = 0; i < transformedPoints.Length; i++ )
+			transformedPoints[ i ] = toLocal
+				? transform.InverseTransformPoint( points[ i ] )
+				: transform.TransformPoint( points[ i ] );
+
+		return transformedPoints;
 	}
 }

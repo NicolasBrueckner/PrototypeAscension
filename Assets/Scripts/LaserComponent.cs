@@ -12,7 +12,6 @@ public class LaserComponent : MonoBehaviour
 
 	private void Awake()
 	{
-
 		UpdateLaser();
 		SetLaserStatus( true );
 	}

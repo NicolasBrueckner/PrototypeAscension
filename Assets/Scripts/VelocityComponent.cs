@@ -19,7 +19,6 @@ public class VelocityComponent : MonoBehaviour
 	{
 		TryMoveToTarget();
 		UpdateVelocity();
-		transform.Rotate( new Vector3( 0, 0, 2 ) );
 	}
 
 	private void UpdateVelocity()
