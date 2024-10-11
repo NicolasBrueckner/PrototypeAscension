@@ -11,16 +11,19 @@ public class PointsComponentEditor : Editor
 	{
 		if ( target is FollowPathComponent followPathComponent )
 		{
-			Transform transform = followPathComponent.transform;
-			Vector2[] localPoints = CoordinateSpaceConversion( followPathComponent.targets, transform, true );
-			HandlePoints( localPoints, pos => followPathComponent.targets = CoordinateSpaceConversion( pos, transform, false ) );
+			//Transform transform = followPathComponent.transform;
+			//Vector2[] localPoints = CoordinateSpaceConversion( followPathComponent.targets, transform, true );
+			HandlePoints( followPathComponent.targets, pos => followPathComponent.targets = pos );
 		}
 		else if ( target is LaserComponent laserComponent )
 		{
-			Transform transform = laserComponent.transform;
-			Vector2[] localPoints = CoordinateSpaceConversion( laserComponent.points, transform, true );
-			HandlePoints( localPoints, pos => laserComponent.points = CoordinateSpaceConversion( pos, transform, false ) );
-			laserComponent.UpdateLaser();
+			//Transform transform = laserComponent.transform;
+			//Vector2[] localPoints = CoordinateSpaceConversion( laserComponent.points, transform, true );
+			HandlePoints( laserComponent.points, pos =>
+			{
+				laserComponent.points = pos;
+				laserComponent.UpdateLaser();
+			} );
 		}
 	}
 
