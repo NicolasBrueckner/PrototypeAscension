@@ -14,6 +14,7 @@ public class ResetPlayerComponent : MonoBehaviour
 
 		if ( ValidateCollision( collisionObject, resetableMask ) )
 		{
+			Debug.Log( $"valdid collision with: {collisionObject.name}" );
 			ResetPlayer( collisionObject );
 		}
 	}

@@ -20,6 +20,8 @@ public class CheckPointManager : MonoBehaviour
 	public void Respawn( GameObject playerObject )
 	{
 		PlayerJumpController jumpController = playerObject.GetComponent<PlayerJumpController>();
+		if ( current == null )
+			Debug.Log( "current is null" );
 
 		if ( jumpController )
 			jumpController.StopJump();

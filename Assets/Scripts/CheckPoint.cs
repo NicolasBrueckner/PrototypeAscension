@@ -7,6 +7,7 @@ public class CheckPoint : MonoBehaviour
 
 	private void OnTriggerEnter2D( Collider2D collision )
 	{
+		Debug.Log( "in OnTriggerEnter2D of Checkpoint" );
 		Manager.SetCurrent( this );
 	}
 }

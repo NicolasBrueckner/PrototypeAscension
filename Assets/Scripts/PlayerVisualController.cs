@@ -44,6 +44,5 @@ public class PlayerVisualController : MonoBehaviour
 	private void OnChargeChanged( float emissionFraction )
 	{
 		_material.SetFloat( EmissionPropertyID, Mathf.Lerp( 1, maxEmissionStrength, emissionFraction ) );
-		Debug.Log( $"Fraction: {emissionFraction}, Property: {_material.GetFloat( EmissionPropertyID )}" );
 	}
 }

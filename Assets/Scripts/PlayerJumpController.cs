@@ -67,6 +67,14 @@ public class PlayerJumpController : MonoBehaviour
 		_isJumpStopped = false;
 
 		SetRuntimeSpeed( 0.3f );
+
+		if ( _currentState == PlayerState.InAir )
+		{
+			_isCharging = false;
+			_currentJumpStrength = maxJumpStrength * 0.6f;
+			return;
+		}
+
 		_chargeJumpCoroutine ??= StartCoroutine( ChargeJumpCoroutine() );
 	}
 
