@@ -82,6 +82,18 @@ public static class Utility
 
 	public static Vector2[] V3ToV2( Vector3[] array )
 	{
-		return Array.ConvertAll( array, v => new Vector2( v.x, v.y ) );
+		return Array.ConvertAll( array, v => ( Vector2 )v );
+	}
+
+	public static Vector2 GetAverageCollisionNormal( Collision2D collision )
+	{
+		Vector2 normal = Vector2.zero;
+
+		foreach ( ContactPoint2D point in collision.contacts )
+			normal += point.normal;
+
+		normal /= collision.contacts.Length;
+
+		return normal;
 	}
 }

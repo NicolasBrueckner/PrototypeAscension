@@ -24,7 +24,7 @@ public class PlayerVisualController : MonoBehaviour
 		_playerCollisionController = GetComponent<PlayerCollisionController>();
 
 		_playerJumpController.ChargeChanged += OnChargeChanged;
-		_playerCollisionController.PositionStateChanged += OnPositionStateChanged;
+		_playerCollisionController.StateChanged += OnPositionStateChanged;
 	}
 
 	private void FixedUpdate()

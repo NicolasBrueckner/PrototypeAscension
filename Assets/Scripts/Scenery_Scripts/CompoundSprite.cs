@@ -9,26 +9,26 @@ public class CompoundSprite : MonoBehaviour
 
 	private BoxCollider2D _box;
 	private IEnumerable _renderers;
-	private Dictionary<SpriteRenderer, BoxCollider2D> _collidersbyRenderers;
 	private Dictionary<BoxCollider2D, Vector2> _sizeByColliders;
 	private Dictionary<BoxCollider2D, Vector2> _offsetByColliders;
 
 	public void UpdateCompoundSize()
 	{
-		foreach ( SpriteRenderer renderer in _collidersbyRenderers.Keys )
+		foreach ( SpriteRenderer renderer in _renderers )
 		{
 			renderer.size = tiledSize;
 
-			_box = _collidersbyRenderers[ renderer ];
-			_box.size = _sizeByColliders[ _box ] * tiledSize;
-			_box.offset = _offsetByColliders[ _box ] * tiledSize;
+			if ( _box = renderer.GetComponent<BoxCollider2D>() )
+			{
+				_box.size = _sizeByColliders[ _box ] * tiledSize;
+				_box.offset = _offsetByColliders[ _box ] * tiledSize;
+			}
 		}
 	}
 
 	public void GatherCompound()
 	{
 		_renderers = GetValidRenderers();
-		_collidersbyRenderers = new();
 		_sizeByColliders = new();
 		_offsetByColliders = new();
 
@@ -36,7 +36,6 @@ public class CompoundSprite : MonoBehaviour
 		{
 			if ( _box = renderer.GetComponent<BoxCollider2D>() )
 			{
-				_collidersbyRenderers.Add( renderer, _box );
 				_sizeByColliders.Add( _box, _box.size );
 				_offsetByColliders.Add( _box, _box.offset );
 			}

@@ -32,7 +32,7 @@ public class PlayerJumpController : MonoBehaviour
 		_playerCollisionController = GetComponent<PlayerCollisionController>();
 
 		_InputEventManager.InputsBound += BindInputEvents;
-		_playerCollisionController.PositionStateChanged += OnPlayerStateChanged;
+		_playerCollisionController.StateChanged += OnPlayerStateChanged;
 	}
 	#endregion
 
