@@ -25,8 +25,6 @@ public class PlayerCollisionController : MonoBehaviour
 {
 	public List<PlayerStateData> states;
 
-	public PlayerState state;
-
 	public event Action<PlayerState> StateChanged;
 
 	private bool _isHolding;
@@ -49,6 +47,9 @@ public class PlayerCollisionController : MonoBehaviour
 
 	private void OnCollisionEnter2D( Collision2D collision )
 	{
+		if ( CheckForOneWay( collision ) )
+			return;
+
 		if ( !_isColliding )
 		{
 			_isColliding = true;
@@ -92,7 +93,6 @@ public class PlayerCollisionController : MonoBehaviour
 
 	private void OnStateChanged( PlayerState state )
 	{
-		this.state = state;
 		StateChanged?.Invoke( state );
 	}
 
@@ -131,17 +131,18 @@ public class PlayerCollisionController : MonoBehaviour
 public class DisposableHold : IDisposable
 {
 	private readonly Rigidbody2D _rb2D;
+	private float _drag;
 
 	public DisposableHold( Rigidbody2D rb2D )
 	{
 		_rb2D = rb2D;
-		_rb2D.gravityScale = 0.0f;
-		_rb2D.velocity = Vector3.zero;
+		_drag = _rb2D.drag;
+		_rb2D.drag = float.MaxValue;
 	}
 
 	public void Dispose()
 	{
-		_rb2D.gravityScale = 1.0f;
+		_rb2D.drag = _drag;
 	}
 }
 
@@ -159,7 +160,7 @@ public class DisposableSetParent : IDisposable
 
 	public void Dispose()
 	{
-		_child.SetParent( null );
+		SetParent( null );
 	}
 
 	private void SetParent( GameObject parent )
@@ -167,13 +168,5 @@ public class DisposableSetParent : IDisposable
 		Transform target = ( parent != null ) ? FindParentWithLayer( parent.transform, _parentMask ) : null;
 
 		_child.SetParent( target );
-	}
-}
-
-public class DisposableState : IDisposable
-{
-	public DisposableState( PlayerState state )
-	{
-
 	}
 }

@@ -96,4 +96,22 @@ public static class Utility
 
 		return normal;
 	}
+
+	public static bool CheckForOneWay( Collision2D collision )
+	{
+		PlatformEffector2D effector = collision.gameObject.GetComponent<PlatformEffector2D>();
+
+		if ( effector == null || !effector.useOneWay )
+			return false;
+
+		Vector2 normal = collision.contacts[ 0 ].normal;
+		Vector2 up = effector.transform.up;
+		float angle = effector.surfaceArc / 2.0f;
+		float angleBetween = Vector2.Angle( normal, up );
+
+		if ( angleBetween <= angle )
+			return false;
+
+		return true;
+	}
 }
