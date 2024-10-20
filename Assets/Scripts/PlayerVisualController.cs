@@ -8,7 +8,6 @@ public class PlayerVisualController : MonoBehaviour
 	public float maxEmissionStrength;
 
 	private bool _isInAir;
-	private Coroutine _spinCoroutine;
 	private Rigidbody2D _rb2D;
 	private Material _material;
 	private PlayerJumpController _playerJumpController;

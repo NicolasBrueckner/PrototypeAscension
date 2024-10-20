@@ -51,8 +51,12 @@ public class PlayerJumpController : MonoBehaviour
 		{
 			case PlayerState.OnGround:
 				_remainingJumps = jumpNumber;
+				if ( _isCharging )
+					_chargeJumpCoroutine ??= StartCoroutine( ChargeJumpCoroutine() );
 				break;
 			case PlayerState.OnWall:
+				if ( _isCharging )
+					_chargeJumpCoroutine ??= StartCoroutine( ChargeJumpCoroutine() );
 				break;
 			case PlayerState.InAir:
 				if ( _remainingJumps == jumpNumber )
@@ -70,8 +74,7 @@ public class PlayerJumpController : MonoBehaviour
 
 		if ( _currentState == PlayerState.InAir )
 		{
-			_isCharging = false;
-			_currentJumpStrength = maxJumpStrength * 0.6f;
+			_currentJumpStrength = maxJumpStrength * 0.7f;
 			return;
 		}
 
@@ -118,11 +121,11 @@ public class PlayerJumpController : MonoBehaviour
 	private IEnumerator ChargeJumpCoroutine()
 	{
 		_currentJumpStrength = 0;
+		float timer = 0;
 
-		while ( _isCharging )
+		while ( _isCharging && ( timer += Time.fixedUnscaledDeltaTime ) < 1.0f )
 		{
-			_currentJumpStrength += 20f * Time.fixedDeltaTime;
-			_currentJumpStrength = Mathf.Min( _currentJumpStrength, maxJumpStrength );
+			_currentJumpStrength = Mathf.Lerp( _currentJumpStrength, maxJumpStrength, timer );
 
 			OnChargeChanged( _currentJumpStrength / maxJumpStrength );
 
