@@ -30,6 +30,7 @@ public class PlayerCollisionController : MonoBehaviour
 	private bool _isHolding;
 	private bool _isColliding;
 	private Rigidbody2D _rb2D;
+	private Collider2D _collider;
 
 	private InputEventManager _inputEventManager => InputEventManager.Instance;
 
@@ -37,6 +38,7 @@ public class PlayerCollisionController : MonoBehaviour
 	private void Awake()
 	{
 		_rb2D = GetComponent<Rigidbody2D>();
+		_collider = GetComponent<Collider2D>();
 		_inputEventManager.JumpCanceled += OnJumpCanceled;
 	}
 
@@ -89,6 +91,7 @@ public class PlayerCollisionController : MonoBehaviour
 		SeperateFromCollision( collision );
 		OnStateChanged( PlayerState.InAir );
 		_isColliding = false;
+		DoubleCheckCollision();
 	}
 
 	private void OnStateChanged( PlayerState state )
@@ -104,6 +107,14 @@ public class PlayerCollisionController : MonoBehaviour
 		Vector2 normal = GetAverageCollisionNormal( collision );
 
 		_rb2D.AddForce( normal * 0.1f, ForceMode2D.Impulse );
+	}
+
+	private async Task DoubleCheckCollision()
+	{
+		await Task.Delay( TimeSpan.FromSeconds( Time.fixedUnscaledDeltaTime ) );
+
+		_collider.enabled = false;
+		_collider.enabled = true;
 	}
 
 	private async Task HoldIndefinitely()

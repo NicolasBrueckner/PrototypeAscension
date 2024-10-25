@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 932dca17bd122434a9ca5b7dc716bd54
+guid: cc8fdb51b3635b7489f5984ede29016b
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -44,7 +44,7 @@ TextureImporter:
   lightmap: 0
   compressionQuality: 50
   spriteMode: 1
-  spriteExtrude: 1
+  spriteExtrude: 0
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
@@ -119,11 +119,11 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures:
-    - texture: {fileID: 2800000, guid: 029ba0e794e1a6a408580a9512f27db9, type: 3}
+    - texture: {fileID: 2800000, guid: 52ca76d7013a22e429bb90172bdeae7f, type: 3}
       name: _EmissionTex
-    - texture: {fileID: 2800000, guid: 22091bcf38190fe41b6f607c1a0de0ef, type: 3}
+    - texture: {fileID: 2800000, guid: 53014e000d332e4479e18ef7dbdfa588, type: 3}
       name: _HeightTex
-    - texture: {fileID: 2800000, guid: f2d4e7d4a9b23ee4290783eb1b511fec, type: 3}
+    - texture: {fileID: 2800000, guid: 436106f0d4f5e5842b6e0d523d1da449, type: 3}
       name: _NormalTex
     nameFileIdTable: {}
   mipmapLimitGroupName: 
