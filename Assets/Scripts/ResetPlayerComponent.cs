@@ -1,7 +1,7 @@
 using UnityEngine;
 using static Utility;
 
-[RequireComponent( typeof( Collider2D ) )]
+[ RequireComponent( typeof( Collider2D ) ) ]
 public class ResetPlayerComponent : MonoBehaviour
 {
 	public LayerMask resetableMask;
@@ -12,11 +12,8 @@ public class ResetPlayerComponent : MonoBehaviour
 	{
 		GameObject collisionObject = collision.gameObject;
 
-		if ( ValidateCollision( collisionObject, resetableMask ) )
-		{
-			Debug.Log( $"valdid collision with: {collisionObject.name}" );
+		if( ValidateCollision( collisionObject, resetableMask ) )
 			ResetPlayer( collisionObject );
-		}
 	}
 
 	private void ResetPlayer( GameObject playerObject )
