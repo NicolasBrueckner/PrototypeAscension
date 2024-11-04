@@ -41,6 +41,9 @@ TagManager:
   - name: Background
     uniqueID: 1999628617
     locked: 0
+  - name: Zapper
+    uniqueID: 3826517647
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

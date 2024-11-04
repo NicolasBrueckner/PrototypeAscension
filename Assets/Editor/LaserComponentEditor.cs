@@ -56,6 +56,7 @@ public class LaserComponentEditor : Editor
 		}
 
 		serializedObject.ApplyModifiedProperties();
+		_component.UpdateLaserComponent();
 	}
 
 	// draws handles that can be dragged and returns the updated position
