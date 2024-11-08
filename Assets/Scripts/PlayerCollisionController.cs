@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using static Utility;
@@ -11,34 +12,33 @@ public enum PlayerState
 	InAir,
 }
 
-[Serializable]
+[ Serializable ]
 public struct PlayerStateData
 {
 	public PlayerState State;
-	public LayerMask Mask;
-	public int holdTime; //-1 is infinite
+	public LayerMask   Mask;
+	public int         holdTime; //-1 is infinite
 }
 
-[RequireComponent( typeof( Collider2D ) )]
-[RequireComponent( typeof( Rigidbody2D ) )]
+[ RequireComponent( typeof( Collider2D ) ) ]
+[ RequireComponent( typeof( Rigidbody2D ) ) ]
 public class PlayerCollisionController : MonoBehaviour
 {
-	public List<PlayerStateData> states;
+	public  List<PlayerStateData> states;
+	private Collider2D            _collider;
+	private Collision2D           _currentCollision;
+	private bool                  _isColliding;
 
-	public event Action<PlayerState> StateChanged;
-
-	private bool _isHolding;
-	private bool _isColliding;
+	private bool        _isHolding;
 	private Rigidbody2D _rb2D;
-	private Collider2D _collider;
 
 	private InputEventManager _inputEventManager => InputEventManager.Instance;
 
 
 	private void Awake()
 	{
-		_rb2D = GetComponent<Rigidbody2D>();
-		_collider = GetComponent<Collider2D>();
+		_rb2D                           =  GetComponent<Rigidbody2D>();
+		_collider                       =  GetComponent<Collider2D>();
 		_inputEventManager.JumpCanceled += OnJumpCanceled;
 	}
 
@@ -49,25 +49,24 @@ public class PlayerCollisionController : MonoBehaviour
 
 	private void OnCollisionEnter2D( Collision2D collision )
 	{
-		if ( CheckForOneWay( collision ) )
+		if( CheckForOneWay( collision ) )
 			return;
 
-		if ( !_isColliding )
+		if( !_isColliding )
 		{
 			_isColliding = true;
 			CheckCollision( collision );
 		}
 	}
 
+	public event Action<PlayerState> StateChanged;
+
 	private async void CheckCollision( Collision2D collision )
 	{
-		foreach ( PlayerStateData data in states )
+		foreach( PlayerStateData data in states.Where( data => TryValidateCollision( collision, data.Mask ) ) )
 		{
-			if ( TryValidateCollision( collision, data.Mask ) )
-			{
-				await HandleCollision( collision, data );
-				return;
-			}
+			await HandleCollision( collision, data );
+			return;
 		}
 	}
 
@@ -75,23 +74,23 @@ public class PlayerCollisionController : MonoBehaviour
 	{
 		OnStateChanged( data.State );
 
-		using ( new DisposableHold( _rb2D ) )
+		using( new DisposableHold( _rb2D ) )
 		{
-			using ( new DisposableSetParent( transform, collision.gameObject ) )
+			using( new DisposableSetParent( transform, collision.gameObject ) )
 			{
 				_isHolding = true;
 
-				if ( data.holdTime == -1 )
+				if( data.holdTime == -1 )
 					await HoldIndefinitely();
 				else
 					await HoldForDuration( data.holdTime );
 			}
 		}
 
-		SeperateFromCollision( collision );
+		SeparateFromCollision( collision );
 		OnStateChanged( PlayerState.InAir );
 		_isColliding = false;
-		DoubleCheckCollision();
+		await DoubleCheckCollision( collision );
 	}
 
 	private void OnStateChanged( PlayerState state )
@@ -99,9 +98,9 @@ public class PlayerCollisionController : MonoBehaviour
 		StateChanged?.Invoke( state );
 	}
 
-	private void SeperateFromCollision( Collision2D collision )
+	private void SeparateFromCollision( Collision2D collision )
 	{
-		if ( collision.contacts.Length == 0 )
+		if( collision.contacts.Length == 0 )
 			return;
 
 		Vector2 normal = GetAverageCollisionNormal( collision );
@@ -109,8 +108,13 @@ public class PlayerCollisionController : MonoBehaviour
 		_rb2D.AddForce( normal * 0.1f, ForceMode2D.Impulse );
 	}
 
-	private async Task DoubleCheckCollision()
+	private async Task DoubleCheckCollision( Collision2D collision )
 	{
+		if( ValidateVelocity( _rb2D.velocity, GetAverageCollisionNormal( collision ), 90f ) )
+			return;
+
+		Debug.Log( "not a valid velocity" );
+
 		await Task.Delay( TimeSpan.FromSeconds( Time.fixedUnscaledDeltaTime ) );
 
 		_collider.enabled = false;
@@ -119,14 +123,14 @@ public class PlayerCollisionController : MonoBehaviour
 
 	private async Task HoldIndefinitely()
 	{
-		while ( _isHolding )
+		while( _isHolding )
 			await Task.Yield();
 	}
 
 	private async Task HoldForDuration( float duration )
 	{
 		float timer = duration;
-		while ( _isHolding && timer > 0.0f )
+		while( _isHolding && timer > 0.0f )
 		{
 			await Task.Delay( TimeSpan.FromSeconds( Time.fixedDeltaTime ) );
 			timer -= Time.fixedDeltaTime;
@@ -141,13 +145,13 @@ public class PlayerCollisionController : MonoBehaviour
 
 public class DisposableHold : IDisposable
 {
+	private readonly float       _drag;
 	private readonly Rigidbody2D _rb2D;
-	private float _drag;
 
 	public DisposableHold( Rigidbody2D rb2D )
 	{
-		_rb2D = rb2D;
-		_drag = _rb2D.drag;
+		_rb2D      = rb2D;
+		_drag      = _rb2D.drag;
 		_rb2D.drag = float.MaxValue;
 	}
 
@@ -159,8 +163,8 @@ public class DisposableHold : IDisposable
 
 public class DisposableSetParent : IDisposable
 {
-	private Transform _child;
-	private LayerMask _parentMask = LayerMask.NameToLayer( "CompoundCollision" );
+	private readonly Transform _child;
+	private readonly LayerMask _parentMask = LayerMask.NameToLayer( "CompoundCollision" );
 
 	public DisposableSetParent( Transform child, GameObject parent )
 	{
@@ -176,7 +180,7 @@ public class DisposableSetParent : IDisposable
 
 	private void SetParent( GameObject parent )
 	{
-		Transform target = ( parent != null ) ? FindParentWithLayer( parent.transform, _parentMask ) : null;
+		Transform target = parent != null ? FindParentWithLayer( parent.transform, _parentMask ) : null;
 
 		_child.SetParent( target );
 	}

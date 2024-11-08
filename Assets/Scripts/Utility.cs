@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public static class Utility
 {
@@ -7,11 +8,12 @@ public static class Utility
 	{
 		GameObject collisionObject = collision.gameObject;
 
-		if ( collisionObject )
+		if( collisionObject )
 			return ValidateCollision( collisionObject, mask );
 
 		return false;
 	}
+
 	public static bool ValidateCollision( GameObject collisionObject, LayerMask mask )
 	{
 		int collisionLayer = collisionObject.layer;
@@ -20,26 +22,23 @@ public static class Utility
 
 	public static T CreateSingleton<T>( T instance, GameObject gameObject ) where T : Component
 	{
-		if ( instance == null )
+		if( instance == null )
 		{
 			instance = gameObject.GetComponent<T>();
-			if ( instance == null )
-			{
+			if( instance == null )
 				instance = gameObject.AddComponent<T>();
-			}
-			UnityEngine.Object.DontDestroyOnLoad( gameObject );
+			Object.DontDestroyOnLoad( gameObject );
 			return instance;
 		}
-		else if ( instance.gameObject != gameObject )
-		{
-			UnityEngine.Object.Destroy( gameObject );
-		}
+
+		if( instance.gameObject != gameObject )
+			Object.Destroy( gameObject );
 		return instance;
 	}
 
 	public static void SetRuntimeSpeed( float value )
 	{
-		Time.timeScale = value;
+		Time.timeScale      = value;
 		Time.fixedDeltaTime = 0.02f * Time.timeScale;
 	}
 
@@ -47,14 +46,10 @@ public static class Utility
 	{
 		Rigidbody2D rb2D = gameObject.GetComponent<Rigidbody2D>();
 
-		if ( rb2D )
-		{
+		if( rb2D )
 			StopMovement( rb2D );
-		}
 		else
-		{
 			Debug.LogError( $"No Rigidbody2D on {gameObject} found." );
-		}
 	}
 
 	public static void StopMovement( Rigidbody2D rb2D )
@@ -64,9 +59,9 @@ public static class Utility
 
 	public static Transform FindParentWithLayer( Transform child, LayerMask mask )
 	{
-		while ( child != null )
+		while( child != null )
 		{
-			if ( ( ( 1 << child.gameObject.layer ) & mask ) != 0 )
+			if( ( ( 1 << child.gameObject.layer ) & mask ) != 0 )
 				return child;
 
 			child = child.parent;
@@ -89,7 +84,7 @@ public static class Utility
 	{
 		Vector2 normal = Vector2.zero;
 
-		foreach ( ContactPoint2D point in collision.contacts )
+		foreach( ContactPoint2D point in collision.contacts )
 			normal += point.normal;
 
 		normal /= collision.contacts.Length;
@@ -101,17 +96,21 @@ public static class Utility
 	{
 		PlatformEffector2D effector = collision.gameObject.GetComponent<PlatformEffector2D>();
 
-		if ( effector == null || !effector.useOneWay )
+		if( effector == null || !effector.useOneWay )
 			return false;
 
-		Vector2 normal = collision.contacts[ 0 ].normal;
-		Vector2 up = effector.transform.up;
-		float angle = effector.surfaceArc / 2.0f;
-		float angleBetween = Vector2.Angle( normal, up );
+		Vector2 normal       = collision.contacts[ 0 ].normal;
+		Vector2 up           = effector.transform.up;
+		float   angle        = effector.surfaceArc / 2.0f;
+		float   angleBetween = Vector2.Angle( normal, up );
 
-		if ( angleBetween <= angle )
-			return false;
+		return !( angleBetween <= angle );
+	}
 
-		return true;
+	public static bool ValidateVelocity( Vector2 velocity, Vector2 surfaceNormal, float threshold )
+	{
+		float angle = Vector2.Angle( velocity, surfaceNormal );
+
+		return angle <= threshold;
 	}
 }

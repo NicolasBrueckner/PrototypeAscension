@@ -1,54 +1,70 @@
-using System.Collections;
+using System;
+using System.Threading.Tasks;
 using UnityEngine;
 using static Utility;
 
-[RequireComponent( typeof( CircleCollider2D ) )]
+[ RequireComponent( typeof( CircleCollider2D ) ) ]
 public class PortalDoor : MonoBehaviour
 {
 	public PortalDoor targetDoor;
-	public LayerMask portableMask;
+	public LayerMask  portableMask;
 
-	private CircleCollider2D _boundingCircle;
-	private Coroutine _coolDownCoroutine;
+	private bool      _isActive = true;
+	private bool      _isColliding;
 	private Transform _targetTransform;
 
 	private void Awake()
 	{
-		_boundingCircle = GetComponent<CircleCollider2D>();
 		_targetTransform = targetDoor.transform;
 	}
 
-	private void OnTriggerEnter2D( Collider2D collision )
+	private void OnDrawGizmos()
 	{
-		GameObject collisionObject = collision.gameObject;
-		Rigidbody2D rb2D = collisionObject.GetComponent<Rigidbody2D>();
+		Gizmos.color = Color.red;
 
-		if ( ValidateCollision( collisionObject, portableMask ) && rb2D )
-		{
-			Teleport( rb2D );
-		}
+		Gizmos.DrawWireSphere( transform.position, GetComponent<CircleCollider2D>().radius );
 	}
 
-	private void Teleport( Rigidbody2D rb2D )
+	private void OnTriggerEnter2D( Collider2D other )
 	{
-		targetDoor.DeactivatePortalDoor();
+		GameObject  collisionObject = other.gameObject;
+		Rigidbody2D rb2D            = collisionObject.GetComponent<Rigidbody2D>();
+
+		_isColliding = true;
+		Debug.Log( $"is colliding in: {gameObject.name}" );
+		if( !ValidateCollision( collisionObject, portableMask ) || !rb2D || !_isActive )
+			return;
+
+		Teleport( rb2D );
+	}
+
+	private void OnTriggerExit2D( Collider2D collision )
+	{
+		Debug.Log( $"exit from portal: {gameObject.name}" );
+		_isColliding = false;
+	}
+
+	private async void Teleport( Rigidbody2D rb2D )
+	{
+		Debug.Log( $"porting from {gameObject.name} to {targetDoor.gameObject.name}" );
 		rb2D.position = _targetTransform.position;
+		await targetDoor.DeactivatePortalDoor();
 	}
 
-	public void DeactivatePortalDoor()
+	private async Task DeactivatePortalDoor()
 	{
-		if ( _coolDownCoroutine == null )
+		Debug.Log( $"deactivate {gameObject.name}" );
+		_isActive = false;
+
+		while( _isColliding )
 		{
-			_boundingCircle.enabled = false;
-			_coolDownCoroutine = StartCoroutine( CooldownCoroutine() );
+			Debug.Log( $"delaying... in {gameObject.name}" );
+			await Task.Delay( TimeSpan.FromSeconds( 1 ) );
 		}
-	}
 
-	private IEnumerator CooldownCoroutine()
-	{
-		yield return new WaitForSeconds( 1.0f );
-		_boundingCircle.enabled = true;
+		Debug.Log( $"delaying last... in {gameObject.name}" );
+		await Task.Delay( TimeSpan.FromSeconds( 1 ) );
 
-		_coolDownCoroutine = null;
+		_isActive = true;
 	}
 }

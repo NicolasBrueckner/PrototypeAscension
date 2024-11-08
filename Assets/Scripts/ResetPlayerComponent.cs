@@ -6,7 +6,7 @@ public class ResetPlayerComponent : MonoBehaviour
 {
 	public LayerMask resetableMask;
 
-	private CheckPointManager _checkPointManager => CheckPointManager.Instance;
+	private static CheckPointManager _checkPointManager => CheckPointManager.Instance;
 
 	private void OnTriggerEnter2D( Collider2D collision )
 	{
@@ -16,7 +16,7 @@ public class ResetPlayerComponent : MonoBehaviour
 			ResetPlayer( collisionObject );
 	}
 
-	private void ResetPlayer( GameObject playerObject )
+	private static void ResetPlayer( GameObject playerObject )
 	{
 		_checkPointManager.Respawn( playerObject );
 	}

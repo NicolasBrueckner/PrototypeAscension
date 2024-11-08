@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using static Utility;
 
@@ -7,15 +8,18 @@ using static Utility;
 [ RequireComponent( typeof( EdgeCollider2D ) ) ]
 public class LaserComponent : MonoBehaviour
 {
-	public           GameObject                  zapperPrefab;
-	public           Vector3[]                   points;
-	private readonly Dictionary<int, GameObject> _zappers = new();
+	public GameObject zapperPrefab;
+	public Vector3[]  points;
+
+	[ SerializeField ] private SerializedDictionary<int, GameObject> _zappers;
 
 	private EdgeCollider2D _col;
 	private LineRenderer   _line;
 
 	private void Awake()
 	{
+		_line = GetComponent<LineRenderer>();
+		_col  = GetComponent<EdgeCollider2D>();
 		SetLaserStatus( true );
 	}
 
