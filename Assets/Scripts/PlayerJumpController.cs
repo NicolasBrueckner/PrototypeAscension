@@ -3,76 +3,80 @@ using System.Collections;
 using UnityEngine;
 using static Utility;
 
-[RequireComponent( typeof( Rigidbody2D ) )]
-[RequireComponent( typeof( PlayerCollisionController ) )]
+[ RequireComponent( typeof( Rigidbody2D ) ) ]
+[ RequireComponent( typeof( PlayerCollisionController ) ) ]
 public class PlayerJumpController : MonoBehaviour
 {
-	public int jumpNumber;
-	public float maxJumpStrength;
-
-	public event Action<float> ChargeChanged;
+	public  int                       jumpNumber;
+	public  float                     maxJumpStrength;
+	private Coroutine                 _chargeJumpCoroutine;
+	private float                     _currentJumpStrength;
+	private PlayerState               _currentState;
+	private bool                      _isCharging;
+	private bool                      _isJumpStopped;
+	private Vector2                   _mousePosition;
+	private PlayerCollisionController _playerCollisionController;
+	private Rigidbody2D               _rb2D;
 
 	private int _remainingJumps;
-	private bool _isCharging;
-	private bool _isJumpStopped;
-	private float _currentJumpStrength;
-	private Vector2 _mousePosition;
-	private PlayerState _currentState;
-	private Coroutine _chargeJumpCoroutine;
-	private Rigidbody2D _rb2D;
-	private PlayerCollisionController _playerCollisionController;
 
 	private InputEventManager _InputEventManager => InputEventManager.Instance;
 
 	#region Unity Runtime Methods
+
 	private void Awake()
 	{
-		_remainingJumps = jumpNumber;
-		_rb2D = GetComponent<Rigidbody2D>();
+		_remainingJumps            = jumpNumber;
+		_rb2D                      = GetComponent<Rigidbody2D>();
 		_playerCollisionController = GetComponent<PlayerCollisionController>();
 
-		_InputEventManager.InputsBound += BindInputEvents;
+		_InputEventManager.InputsBound          += BindInputEvents;
 		_playerCollisionController.StateChanged += OnPlayerStateChanged;
 	}
+
 	#endregion
+
+	public event Action<float> ChargeChanged;
 
 	private void BindInputEvents()
 	{
 		_InputEventManager.JumpPerformed += OnJumpPerformed;
-		_InputEventManager.JumpCanceled += OnJumpCanceled;
-		_InputEventManager.AimPerformed += UpdateMousePosition;
+		_InputEventManager.JumpCanceled  += OnJumpCanceled;
+		_InputEventManager.AimPerformed  += UpdateMousePosition;
 	}
 
 	private void OnPlayerStateChanged( PlayerState state )
 	{
 		_currentState = state;
 
-		switch ( _currentState )
+		switch( _currentState )
 		{
 			case PlayerState.OnGround:
 				_remainingJumps = jumpNumber;
-				if ( _isCharging )
+				if( _isCharging )
 					_chargeJumpCoroutine ??= StartCoroutine( ChargeJumpCoroutine() );
 				break;
 			case PlayerState.OnWall:
-				if ( _isCharging )
+				if( _isCharging )
 					_chargeJumpCoroutine ??= StartCoroutine( ChargeJumpCoroutine() );
 				break;
 			case PlayerState.InAir:
-				if ( _remainingJumps == jumpNumber )
+				if( _remainingJumps == jumpNumber )
 					_remainingJumps = jumpNumber - 1;
 				break;
+			default:
+				throw new ArgumentOutOfRangeException();
 		}
 	}
 
 	private void OnJumpPerformed()
 	{
-		_isCharging = true;
+		_isCharging    = true;
 		_isJumpStopped = false;
 
 		SetRuntimeSpeed( 0.3f );
 
-		if ( _currentState == PlayerState.InAir )
+		if( _currentState == PlayerState.InAir )
 		{
 			_currentJumpStrength = maxJumpStrength * 0.7f;
 			return;
@@ -87,14 +91,14 @@ public class PlayerJumpController : MonoBehaviour
 		_isCharging = false;
 		OnChargeChanged( 0.0f );
 
-		if ( _isJumpStopped )
+		if( _isJumpStopped )
 			return;
 
-		if ( _remainingJumps > 0 )
-		{
-			SetJumpForce();
-			_remainingJumps--;
-		}
+		if( _remainingJumps <= 0 )
+			return;
+
+		SetJumpForce();
+		_remainingJumps--;
 	}
 
 	private void UpdateMousePosition( Vector2 worldPosition )
@@ -105,9 +109,12 @@ public class PlayerJumpController : MonoBehaviour
 	private void SetJumpForce()
 	{
 		Vector2 direction = SetJumpDirection();
-		Vector2 velocity = direction * _currentJumpStrength;
+		Vector2 velocity  = direction * _currentJumpStrength;
 
-		_rb2D.velocity = velocity;
+		if( _currentState == PlayerState.InAir )
+			_rb2D.velocity = velocity;
+		else
+			_rb2D.velocity += velocity;
 	}
 
 	private Vector2 SetJumpDirection()
@@ -123,10 +130,9 @@ public class PlayerJumpController : MonoBehaviour
 		_currentJumpStrength = 0;
 		float timer = 0;
 
-		while ( _isCharging && ( timer += Time.fixedUnscaledDeltaTime ) < 1.0f )
+		while( _isCharging && ( timer += Time.fixedUnscaledDeltaTime ) < 1.0f )
 		{
 			_currentJumpStrength = Mathf.Lerp( _currentJumpStrength, maxJumpStrength, timer );
-
 			OnChargeChanged( _currentJumpStrength / maxJumpStrength );
 
 			yield return new WaitForFixedUpdate();

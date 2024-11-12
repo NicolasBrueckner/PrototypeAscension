@@ -8,10 +8,7 @@ public static class Utility
 	{
 		GameObject collisionObject = collision.gameObject;
 
-		if( collisionObject )
-			return ValidateCollision( collisionObject, mask );
-
-		return false;
+		return collisionObject && ValidateCollision( collisionObject, mask );
 	}
 
 	public static bool ValidateCollision( GameObject collisionObject, LayerMask mask )
@@ -22,10 +19,10 @@ public static class Utility
 
 	public static T CreateSingleton<T>( T instance, GameObject gameObject ) where T : Component
 	{
-		if( instance == null )
+		if( !instance )
 		{
 			instance = gameObject.GetComponent<T>();
-			if( instance == null )
+			if( !instance )
 				instance = gameObject.AddComponent<T>();
 			Object.DontDestroyOnLoad( gameObject );
 			return instance;
@@ -57,14 +54,14 @@ public static class Utility
 		rb2D.velocity = Vector2.zero;
 	}
 
-	public static Transform FindParentWithLayer( Transform child, LayerMask mask )
+	public static Transform FindParentWithLayer( Transform parent, LayerMask mask )
 	{
-		while( child != null )
+		while( parent )
 		{
-			if( ( ( 1 << child.gameObject.layer ) & mask ) != 0 )
-				return child;
+			if( ( ( 1 << parent.gameObject.layer ) & mask.value ) != 0 )
+				return parent;
 
-			child = child.parent;
+			parent = parent.parent;
 		}
 
 		return null;
@@ -96,7 +93,7 @@ public static class Utility
 	{
 		PlatformEffector2D effector = collision.gameObject.GetComponent<PlatformEffector2D>();
 
-		if( effector == null || !effector.useOneWay )
+		if( !effector || !effector.useOneWay )
 			return false;
 
 		Vector2 normal       = collision.contacts[ 0 ].normal;

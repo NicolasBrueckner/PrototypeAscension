@@ -12,7 +12,7 @@ TagManager:
   - Water
   - UI
   - 
-  - 
+  - NoBehaviour
   - Ground
   - Wall
   - Player
@@ -20,7 +20,7 @@ TagManager:
   - Portal
   - Damaging
   - Checkpoint
-  - 
+  - BoostPad
   - 
   - 
   - 
