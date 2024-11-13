@@ -47,7 +47,7 @@ public class LaserComponent : MonoBehaviour
 
 		foreach( int index in points.Select( ( p, i ) => i ) )
 		{
-			if( !_zappers.ContainsKey( index ) )
+			if( !_zappers.ContainsKey( index ) || !_zappers[ index ] )
 				_zappers[ index ] = Instantiate( zapperPrefab, points[ index ], Quaternion.identity, transform );
 			else
 				_zappers[ index ].transform.position = points[ index ];

@@ -8,6 +8,6 @@ public class RotationComponent : MonoBehaviour
 	private void Update()
 	{
 		if( isRotating )
-			transform.Rotate( Vector3.up, rotationSpeed * Time.deltaTime );
+			transform.Rotate( Vector3.forward, rotationSpeed );
 	}
 }
