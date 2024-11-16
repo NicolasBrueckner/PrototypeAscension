@@ -1,42 +1,39 @@
 using UnityEngine;
 
-[RequireComponent( typeof( SpriteRenderer ) )]
-[RequireComponent( typeof( PlayerJumpController ) )]
-[RequireComponent( typeof( PlayerCollisionController ) )]
+[ RequireComponent( typeof( PlayerJumpController ) ) ]
+[ RequireComponent( typeof( PlayerCollisionController ) ) ]
 public class PlayerVisualController : MonoBehaviour
 {
-	public float maxEmissionStrength;
+	private static readonly int        EmissionPropertyID = Shader.PropertyToID( "_EmissionFactor" );
+	public                  GameObject visualContainer;
+	public                  float      rotationSpeed;
+	public                  float      maxEmissionStrength;
 
-	private bool _isInAir;
-	private Rigidbody2D _rb2D;
-	private Material _material;
-	private PlayerJumpController _playerJumpController;
+	private bool                      _isInAir;
+	private Material                  _material;
 	private PlayerCollisionController _playerCollisionController;
-
-	private static readonly int EmissionPropertyID = Shader.PropertyToID( "_EmissionFactor" );
+	private PlayerJumpController      _playerJumpController;
 
 	private void Awake()
 	{
-		_rb2D = GetComponent<Rigidbody2D>();
-		_material = GetComponent<SpriteRenderer>().material;
-		_playerJumpController = GetComponent<PlayerJumpController>();
+		_material                  = visualContainer.GetComponent<SpriteRenderer>().material;
+		_playerJumpController      = GetComponent<PlayerJumpController>();
 		_playerCollisionController = GetComponent<PlayerCollisionController>();
 
-		_playerJumpController.ChargeChanged += OnChargeChanged;
+		_playerJumpController.ChargeChanged     += OnChargeChanged;
 		_playerCollisionController.StateChanged += OnPositionStateChanged;
 	}
 
 	private void FixedUpdate()
 	{
-		if ( _isInAir )
-			_rb2D.MoveRotation( _rb2D.rotation + 25f );
+		if( _isInAir )
+			visualContainer.transform.Rotate( Vector3.forward, rotationSpeed );
 	}
 
 	//spin when in Air
 	private void OnPositionStateChanged( PlayerState state )
 	{
 		_isInAir = state == PlayerState.InAir;
-		_rb2D.constraints = _isInAir ? RigidbodyConstraints2D.None : RigidbodyConstraints2D.FreezeRotation;
 	}
 
 	//brighter when more jump charge
