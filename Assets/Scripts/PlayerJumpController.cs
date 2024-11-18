@@ -7,42 +7,40 @@ using static Utility;
 [ RequireComponent( typeof( PlayerCollisionController ) ) ]
 public class PlayerJumpController : MonoBehaviour
 {
-	public  int                       jumpNumber;
-	public  float                     maxJumpStrength;
-	private Coroutine                 _chargeJumpCoroutine;
-	private float                     _currentJumpStrength;
-	private PlayerState               _currentState;
-	private bool                      _isCharging;
-	private bool                      _isJumpStopped;
-	private Vector2                   _mousePosition;
-	private PlayerCollisionController _playerCollisionController;
-	private Rigidbody2D               _rb2D;
+	public  int         jumpNumber;
+	public  float       maxJumpStrength;
+	private Coroutine   _chargeJumpCoroutine;
+	private float       _currentJumpStrength;
+	private PlayerState _currentState;
+	private bool        _isCharging;
+	private bool        _isJumpStopped;
+	private Vector2     _mousePosition;
+	private Rigidbody2D _rb2D;
 
 	private int _remainingJumps;
 
-	private InputEventManager _InputEventManager => InputEventManager.Instance;
+	private static InputEventManager    InputEventManager    => InputEventManager.Instance;
+	private static GameplayEventManager GameplayEventManager => GameplayEventManager.Instance;
 
 	#region Unity Runtime Methods
 
 	private void Awake()
 	{
-		_remainingJumps            = jumpNumber;
-		_rb2D                      = GetComponent<Rigidbody2D>();
-		_playerCollisionController = GetComponent<PlayerCollisionController>();
+		_remainingJumps = jumpNumber;
+		_rb2D           = GetComponent<Rigidbody2D>();
 
-		_InputEventManager.InputsBound          += BindInputEvents;
-		_playerCollisionController.StateChanged += OnPlayerStateChanged;
+		InputEventManager.InputsBound       += BindInputEvents;
+		GameplayEventManager.StateChanged   += OnPlayerStateChanged;
+		GameplayEventManager.BoostActivated += OnBoostActivated;
 	}
 
 	#endregion
 
-	public event Action<float> ChargeChanged;
-
 	private void BindInputEvents()
 	{
-		_InputEventManager.JumpPerformed += OnJumpPerformed;
-		_InputEventManager.JumpCanceled  += OnJumpCanceled;
-		_InputEventManager.AimPerformed  += UpdateMousePosition;
+		InputEventManager.JumpPerformed += OnJumpPerformed;
+		InputEventManager.JumpCanceled  += OnJumpCanceled;
+		InputEventManager.AimPerformed  += UpdateMousePosition;
 	}
 
 	private void OnPlayerStateChanged( PlayerState state )
@@ -69,6 +67,12 @@ public class PlayerJumpController : MonoBehaviour
 		}
 	}
 
+	private void OnBoostActivated()
+	{
+		if( _remainingJumps == 0 )
+			_remainingJumps = 1;
+	}
+
 	private void OnJumpPerformed()
 	{
 		_isCharging    = true;
@@ -89,7 +93,7 @@ public class PlayerJumpController : MonoBehaviour
 	{
 		SetRuntimeSpeed( 1.0f );
 		_isCharging = false;
-		OnChargeChanged( 0.0f );
+		GameplayEventManager.OnChargeChanged( 0.0f );
 
 		if( _isJumpStopped )
 			return;
@@ -133,17 +137,12 @@ public class PlayerJumpController : MonoBehaviour
 		while( _isCharging && ( timer += Time.fixedUnscaledDeltaTime ) < 1.0f )
 		{
 			_currentJumpStrength = Mathf.Lerp( _currentJumpStrength, maxJumpStrength, timer );
-			OnChargeChanged( _currentJumpStrength / maxJumpStrength );
+			GameplayEventManager.OnChargeChanged( _currentJumpStrength / maxJumpStrength );
 
 			yield return new WaitForFixedUpdate();
 		}
 
 		_chargeJumpCoroutine = null;
-	}
-
-	private void OnChargeChanged( float fraction )
-	{
-		ChargeChanged?.Invoke( fraction );
 	}
 
 	public void StopJump()

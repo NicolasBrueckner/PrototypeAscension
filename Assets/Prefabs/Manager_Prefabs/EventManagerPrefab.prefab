@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5481895879456595568}
   - component: {fileID: 6919196349157065230}
+  - component: {fileID: -914636281058659813}
   m_Layer: 0
-  m_Name: InputEventManagerPrefab
+  m_Name: EventManagerPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42,5 +43,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de1d1e15d8fd9424ba20ca685ce9638c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-914636281058659813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3051329922188724887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 411305b141f71a74493805242c0e3afb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

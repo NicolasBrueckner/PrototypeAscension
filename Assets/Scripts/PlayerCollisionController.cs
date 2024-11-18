@@ -31,22 +31,22 @@ public class PlayerCollisionController : MonoBehaviour
 
 	private bool _isHolding;
 
-	private Vector3     _normal;
 	private Rigidbody2D _rb2D;
 
-	private InputEventManager _inputEventManager => InputEventManager.Instance;
+	private static InputEventManager    InputEventManager    => InputEventManager.Instance;
+	private static GameplayEventManager GameplayEventManager => GameplayEventManager.Instance;
 
 
 	private void Awake()
 	{
-		_rb2D                           =  GetComponent<Rigidbody2D>();
-		_collider                       =  GetComponent<Collider2D>();
-		_inputEventManager.JumpCanceled += OnJumpCanceled;
+		_rb2D                          =  GetComponent<Rigidbody2D>();
+		_collider                      =  GetComponent<Collider2D>();
+		InputEventManager.JumpCanceled += OnJumpCanceled;
 	}
 
 	private void Start()
 	{
-		OnStateChanged( PlayerState.InAir );
+		GameplayEventManager.OnStateChanged( PlayerState.InAir );
 	}
 
 	private void OnCollisionEnter2D( Collision2D collision )
@@ -57,9 +57,6 @@ public class PlayerCollisionController : MonoBehaviour
 		_isColliding = true;
 		CheckCollision( collision );
 	}
-
-	public event Action<PlayerState> StateChanged;
-
 
 	private async void CheckCollision( Collision2D collision )
 	{
@@ -74,7 +71,7 @@ public class PlayerCollisionController : MonoBehaviour
 
 	private async Task HandleCollision( Collision2D collision, PlayerStateData data )
 	{
-		OnStateChanged( data.state );
+		GameplayEventManager.OnStateChanged( data.state );
 
 		using( new DisposableHold( _rb2D ) )
 		{
@@ -93,12 +90,7 @@ public class PlayerCollisionController : MonoBehaviour
 		await DoubleCheckCollision( collision );
 
 		SeparateFromCollision( collision );
-		OnStateChanged( PlayerState.InAir );
-	}
-
-	private void OnStateChanged( PlayerState state )
-	{
-		StateChanged?.Invoke( state );
+		GameplayEventManager.OnStateChanged( PlayerState.InAir );
 	}
 
 	private void SeparateFromCollision( Collision2D collision )
@@ -113,7 +105,6 @@ public class PlayerCollisionController : MonoBehaviour
 
 	private async Task DoubleCheckCollision( Collision2D collision )
 	{
-		_normal = GetAverageCollisionNormal( collision );
 		if( ValidateVelocity( _rb2D.velocity, GetAverageCollisionNormal( collision ), 90f ) )
 			return;
 

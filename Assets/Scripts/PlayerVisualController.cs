@@ -9,19 +9,17 @@ public class PlayerVisualController : MonoBehaviour
 	public                  float      rotationSpeed;
 	public                  float      maxEmissionStrength;
 
-	private bool                      _isInAir;
-	private Material                  _material;
-	private PlayerCollisionController _playerCollisionController;
-	private PlayerJumpController      _playerJumpController;
+	private bool     _isInAir;
+	private Material _material;
+
+	private static GameplayEventManager GameplayEventManager => GameplayEventManager.Instance;
 
 	private void Awake()
 	{
-		_material                  = visualContainer.GetComponent<SpriteRenderer>().material;
-		_playerJumpController      = GetComponent<PlayerJumpController>();
-		_playerCollisionController = GetComponent<PlayerCollisionController>();
+		_material = visualContainer.GetComponent<SpriteRenderer>().material;
 
-		_playerJumpController.ChargeChanged     += OnChargeChanged;
-		_playerCollisionController.StateChanged += OnPositionStateChanged;
+		GameplayEventManager.ChargeChanged += OnChargeChanged;
+		GameplayEventManager.StateChanged  += OnPositionStateChanged;
 	}
 
 	private void FixedUpdate()
