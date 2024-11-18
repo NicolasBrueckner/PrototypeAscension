@@ -15,6 +15,8 @@ public class BoostPad : MonoBehaviour
 	private GameObject  _otherObject;
 	private Rigidbody2D _otherRb2D;
 
+	private static GameplayEventManager GameplayEventManager => GameplayEventManager.Instance;
+
 	private void Awake()
 	{
 		_collider = GetComponent<Collider2D>();
@@ -26,7 +28,7 @@ public class BoostPad : MonoBehaviour
 		_otherObject = other.gameObject;
 		_otherRb2D   = other.GetComponent<Rigidbody2D>();
 
-		if( ValidateCollision( _otherObject, boostableMask ) && _otherRb2D )
+		if( ValidateCollision( _otherObject, boostableMask ) || !_otherRb2D )
 			_isValid = true;
 	}
 
@@ -44,7 +46,6 @@ public class BoostPad : MonoBehaviour
 			ApplyBoost( _otherRb2D );
 	}
 
-
 	private bool IsFullyInside()
 	{
 		Bounds bounds      = _collider.bounds;
@@ -61,10 +62,10 @@ public class BoostPad : MonoBehaviour
 
 	private void ApplyBoost( Rigidbody2D rb2D )
 	{
-		Debug.Log( "ApplyBoost" );
 		Vector2 velocity = GetBoostDirection() * boostStrength;
 
 		rb2D.velocity = velocity;
+		GameplayEventManager.OnBoostActivated();
 	}
 
 	private Vector2 GetBoostDirection()
