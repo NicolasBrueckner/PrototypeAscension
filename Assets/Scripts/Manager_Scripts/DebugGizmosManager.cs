@@ -1,18 +1,18 @@
+using Manager_Scripts;
 using UnityEngine;
 using static Utility;
 
 public class DebugGizmosManager : MonoBehaviour
 {
-	public static DebugGizmosManager Instance { get; private set; }
+	[ Header( "Aim Line" ) ] public GameObject playerObject;
 
-	[Header( "Aim Line" )]
-	public GameObject playerObject;
-	public Color lineColor;
+	public        Color              lineColor;
+	public static DebugGizmosManager Instance{ get; private set; }
 
 	private InputEventManager _InputEventManager => InputEventManager.Instance;
-	private Vector2 _LinePos1 => playerObject != null ? playerObject.transform.position : Vector2.zero;
-	private Vector2 _LinePos2 => _InputEventManager != null ? _InputEventManager.MousePosition : Vector2.zero;
-	private bool _DrawLine => _InputEventManager != null && _InputEventManager.JumpIsPressed;
+	private Vector2           _LinePos1 => playerObject != null ? playerObject.transform.position : Vector2.zero;
+	private Vector2           _LinePos2 => _InputEventManager != null ? _InputEventManager.MousePosition : Vector2.zero;
+	private bool              _DrawLine => _InputEventManager != null && _InputEventManager.JumpIsPressed;
 
 	private void Awake()
 	{
@@ -21,7 +21,7 @@ public class DebugGizmosManager : MonoBehaviour
 
 	private void OnDrawGizmos()
 	{
-		if ( _DrawLine )
+		if( _DrawLine )
 		{
 			Gizmos.color = lineColor;
 

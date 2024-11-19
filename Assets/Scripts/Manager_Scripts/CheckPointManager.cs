@@ -3,7 +3,7 @@ using static Utility;
 
 public class CheckPointManager : MonoBehaviour
 {
-	private       CheckPoint        current;
+	private CheckPoint current;
 	public static CheckPointManager Instance{ get; private set; }
 
 	private void Awake()
@@ -24,7 +24,7 @@ public class CheckPointManager : MonoBehaviour
 			Debug.Log( "current is null" );
 
 		if( jumpController )
-			jumpController.StopJump();
+			jumpController.OnStopJump();
 
 		TryStopMovement( playerObject );
 		playerObject.transform.position = current.transform.position;

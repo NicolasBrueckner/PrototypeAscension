@@ -1,3 +1,4 @@
+using Manager_Scripts;
 using UnityEngine;
 
 [ RequireComponent( typeof( PlayerJumpController ) ) ]
@@ -12,14 +13,14 @@ public class PlayerVisualController : MonoBehaviour
 	private bool     _isInAir;
 	private Material _material;
 
-	private static GameplayEventManager GameplayEventManager => GameplayEventManager.Instance;
+	private static GameplayEventManager _GameplayEventManager => GameplayEventManager.Instance;
 
 	private void Awake()
 	{
 		_material = visualContainer.GetComponent<SpriteRenderer>().material;
 
-		GameplayEventManager.ChargeChanged += OnChargeChanged;
-		GameplayEventManager.StateChanged  += OnPositionStateChanged;
+		_GameplayEventManager.ChargeChanged += OnChargeChanged;
+		_GameplayEventManager.StateChanged  += OnPositionStateChanged;
 	}
 
 	private void FixedUpdate()

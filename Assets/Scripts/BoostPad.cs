@@ -1,4 +1,5 @@
 using System.Linq;
+using Manager_Scripts;
 using UnityEngine;
 using static Utility;
 
@@ -15,7 +16,7 @@ public class BoostPad : MonoBehaviour
 	private GameObject  _otherObject;
 	private Rigidbody2D _otherRb2D;
 
-	private static GameplayEventManager GameplayEventManager => GameplayEventManager.Instance;
+	private static GameplayEventManager _GameplayEventManager => GameplayEventManager.Instance;
 
 	private void Awake()
 	{
@@ -65,7 +66,7 @@ public class BoostPad : MonoBehaviour
 		Vector2 velocity = GetBoostDirection() * boostStrength;
 
 		rb2D.velocity = velocity;
-		GameplayEventManager.OnBoostActivated();
+		_GameplayEventManager.OnBoostActivated();
 	}
 
 	private Vector2 GetBoostDirection()

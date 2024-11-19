@@ -15,6 +15,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "StopJump",
+                    "type": "Button",
+                    "id": "a8f16c0f-2d19-4f0b-aba8-0ae4cce21556",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Aim",
                     "type": "Value",
                     "id": "14835567-48e7-4969-aed7-868ee9bd4f7f",
@@ -44,6 +53,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Aim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7c9bb3f8-80dc-488d-b6d5-c8128a4e3475",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "StopJump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

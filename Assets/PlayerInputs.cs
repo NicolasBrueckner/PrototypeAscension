@@ -37,6 +37,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""Stop Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""a8f16c0f-2d19-4f0b-aba8-0ae4cce21556"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""Aim"",
                     ""type"": ""Value"",
                     ""id"": ""14835567-48e7-4969-aed7-868ee9bd4f7f"",
@@ -68,6 +77,17 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""Aim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7c9bb3f8-80dc-488d-b6d5-c8128a4e3475"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Stop Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -77,6 +97,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         // Runtime
         m_Runtime = asset.FindActionMap("Runtime", throwIfNotFound: true);
         m_Runtime_Jump = m_Runtime.FindAction("Jump", throwIfNotFound: true);
+        m_Runtime_StopJump = m_Runtime.FindAction("Stop Jump", throwIfNotFound: true);
         m_Runtime_Aim = m_Runtime.FindAction("Aim", throwIfNotFound: true);
     }
 
@@ -140,12 +161,14 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Runtime;
     private List<IRuntimeActions> m_RuntimeActionsCallbackInterfaces = new List<IRuntimeActions>();
     private readonly InputAction m_Runtime_Jump;
+    private readonly InputAction m_Runtime_StopJump;
     private readonly InputAction m_Runtime_Aim;
     public struct RuntimeActions
     {
         private @PlayerInputs m_Wrapper;
         public RuntimeActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
         public InputAction @Jump => m_Wrapper.m_Runtime_Jump;
+        public InputAction @StopJump => m_Wrapper.m_Runtime_StopJump;
         public InputAction @Aim => m_Wrapper.m_Runtime_Aim;
         public InputActionMap Get() { return m_Wrapper.m_Runtime; }
         public void Enable() { Get().Enable(); }
@@ -159,6 +182,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
+            @StopJump.started += instance.OnStopJump;
+            @StopJump.performed += instance.OnStopJump;
+            @StopJump.canceled += instance.OnStopJump;
             @Aim.started += instance.OnAim;
             @Aim.performed += instance.OnAim;
             @Aim.canceled += instance.OnAim;
@@ -169,6 +195,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
+            @StopJump.started -= instance.OnStopJump;
+            @StopJump.performed -= instance.OnStopJump;
+            @StopJump.canceled -= instance.OnStopJump;
             @Aim.started -= instance.OnAim;
             @Aim.performed -= instance.OnAim;
             @Aim.canceled -= instance.OnAim;
@@ -192,6 +221,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     public interface IRuntimeActions
     {
         void OnJump(InputAction.CallbackContext context);
+        void OnStopJump(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
     }
 }

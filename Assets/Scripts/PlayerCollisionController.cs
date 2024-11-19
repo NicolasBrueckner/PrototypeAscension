@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Manager_Scripts;
 using UnityEngine;
 using static Utility;
 
@@ -16,37 +17,36 @@ public enum PlayerState
 public struct PlayerStateData
 {
 	public PlayerState state;
-	public LayerMask   mask;
-	public int         holdTime; //-1 is infinite
+	public LayerMask mask;
+	public int holdTime; //-1 is infinite
 }
 
 [ RequireComponent( typeof( Collider2D ) ) ]
 [ RequireComponent( typeof( Rigidbody2D ) ) ]
 public class PlayerCollisionController : MonoBehaviour
 {
-	public  List<PlayerStateData> states;
-	private Collider2D            _collider;
-	private Collision2D           _currentCollision;
-	private bool                  _isColliding;
+	public List<PlayerStateData> states;
+	private Collider2D _collider;
+	private Collision2D _currentCollision;
+	private bool _isColliding;
 
 	private bool _isHolding;
 
 	private Rigidbody2D _rb2D;
 
-	private static InputEventManager    InputEventManager    => InputEventManager.Instance;
-	private static GameplayEventManager GameplayEventManager => GameplayEventManager.Instance;
+	private static GameplayEventManager _GameplayEventManager => GameplayEventManager.Instance;
 
 
 	private void Awake()
 	{
-		_rb2D                          =  GetComponent<Rigidbody2D>();
-		_collider                      =  GetComponent<Collider2D>();
-		InputEventManager.JumpCanceled += OnJumpCanceled;
+		_rb2D = GetComponent<Rigidbody2D>();
+		_collider = GetComponent<Collider2D>();
+		_GameplayEventManager.JumpStarted += OnJumpStarted;
 	}
 
 	private void Start()
 	{
-		GameplayEventManager.OnStateChanged( PlayerState.InAir );
+		_GameplayEventManager.OnStateChanged( PlayerState.InAir );
 	}
 
 	private void OnCollisionEnter2D( Collision2D collision )
@@ -71,7 +71,7 @@ public class PlayerCollisionController : MonoBehaviour
 
 	private async Task HandleCollision( Collision2D collision, PlayerStateData data )
 	{
-		GameplayEventManager.OnStateChanged( data.state );
+		_GameplayEventManager.OnStateChanged( data.state );
 
 		using( new DisposableHold( _rb2D ) )
 		{
@@ -90,7 +90,7 @@ public class PlayerCollisionController : MonoBehaviour
 		await DoubleCheckCollision( collision );
 
 		SeparateFromCollision( collision );
-		GameplayEventManager.OnStateChanged( PlayerState.InAir );
+		_GameplayEventManager.OnStateChanged( PlayerState.InAir );
 	}
 
 	private void SeparateFromCollision( Collision2D collision )
@@ -131,7 +131,7 @@ public class PlayerCollisionController : MonoBehaviour
 		}
 	}
 
-	private void OnJumpCanceled()
+	private void OnJumpStarted()
 	{
 		_isHolding = false;
 	}
@@ -139,13 +139,13 @@ public class PlayerCollisionController : MonoBehaviour
 
 public class DisposableHold : IDisposable
 {
-	private readonly float       _drag;
+	private readonly float _drag;
 	private readonly Rigidbody2D _rb2D;
 
 	public DisposableHold( Rigidbody2D rb2D )
 	{
-		_rb2D      = rb2D;
-		_drag      = _rb2D.drag;
+		_rb2D = rb2D;
+		_drag = _rb2D.drag;
 		_rb2D.drag = float.MaxValue;
 	}
 
