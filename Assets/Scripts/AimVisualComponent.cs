@@ -4,26 +4,26 @@ using UnityEngine;
 [ RequireComponent( typeof( LineRenderer ) ) ]
 public class AimVisualComponent : MonoBehaviour
 {
-	private static readonly int          LengthPropertyID = Shader.PropertyToID( "_LineLength" );
-	public                  float        lineLength;
-	private                 Vector2      _aimDirection;
-	private                 LineRenderer _aimLine;
+	private static readonly int LengthPropertyID = Shader.PropertyToID( "_LineLength" );
+	public float lineLength;
+	private LineRenderer _aimLine;
+	private Vector2 _aimPosition;
 
-	private bool              _displayLine;
-	private Material          _lineMaterial;
-	private InputEventManager _inputEventManager => InputEventManager.Instance;
+	private bool _displayLine;
+	private Material _lineMaterial;
+	private InputEventManager _InputEventManager => InputEventManager.Instance;
 
 	private void Awake()
 	{
-		_aimLine               = GetComponent<LineRenderer>();
+		_aimLine = GetComponent<LineRenderer>();
 		_aimLine.positionCount = 2;
 
 		_lineMaterial = _aimLine.material;
 		_lineMaterial.SetFloat( LengthPropertyID, lineLength );
 
-		_inputEventManager.AimPerformed  += SetAimDirection;
-		_inputEventManager.JumpPerformed += OnJumpPerformed;
-		_inputEventManager.JumpCanceled  += OnJumpCanceled;
+		_InputEventManager.AimPerformed += SetAimPosition;
+		_InputEventManager.JumpPerformed += OnJumpPerformed;
+		_InputEventManager.JumpCanceled += OnJumpCanceled;
 	}
 
 	private void Update()
@@ -35,7 +35,7 @@ public class AimVisualComponent : MonoBehaviour
 	private void UpdateLine()
 	{
 		Vector2 point1 = transform.position;
-		Vector2 point2 = point1 + _aimDirection * lineLength;
+		Vector2 point2 = point1 + GetAimDirection() * lineLength;
 
 		_aimLine.SetPosition( 0, point1 );
 		_aimLine.SetPosition( 1, point2 );
@@ -53,13 +53,20 @@ public class AimVisualComponent : MonoBehaviour
 
 	private void ToggleLine( bool isActive )
 	{
-		_displayLine     = isActive;
+		_displayLine = isActive;
 		_aimLine.enabled = isActive;
 	}
 
-	private void SetAimDirection( Vector2 mousePosition )
+	private void SetAimPosition( Vector2 mousePosition )
 	{
-		_aimDirection = mousePosition - ( Vector2 )transform.position;
-		_aimDirection.Normalize();
+		_aimPosition = mousePosition;
+	}
+
+	private Vector2 GetAimDirection()
+	{
+		Vector2 direction = _aimPosition - ( Vector2 )transform.position;
+		direction.Normalize();
+
+		return direction;
 	}
 }

@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: 2851026445102018478}
   - component: {fileID: 5342772373246199766}
   - component: {fileID: 8118401793452780322}
-  m_Layer: 0
+  - component: {fileID: 6105583494097796371}
+  m_Layer: 13
   m_Name: Enemy01Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -261,3 +262,18 @@ LineRenderer:
   m_UseWorldSpace: 0
   m_Loop: 1
   m_ApplyActiveColorSpace: 1
+--- !u!114 &6105583494097796371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 645920779250903536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deba3f3e4eb940a4e864d39a3606a8a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resetableMask:
+    serializedVersion: 2
+    m_Bits: 1024
