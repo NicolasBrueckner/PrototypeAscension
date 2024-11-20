@@ -7,6 +7,7 @@ public class Portal : MonoBehaviour
 {
 	public Portal target;
 	public LayerMask portableMask;
+	public Color portalColor;
 
 	private bool _isActive = true;
 
