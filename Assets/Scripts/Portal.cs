@@ -1,50 +1,29 @@
-using Manager_Scripts;
 using UnityEngine;
-using static Utility;
 
-[ RequireComponent( typeof( Collider2D ) ) ]
 public class Portal : MonoBehaviour
 {
-	public Portal target;
-	public LayerMask portableMask;
+	private static readonly int ColorPropertyID = Shader.PropertyToID( "_Color" );
 	public Color portalColor;
 
-	private bool _isActive = true;
-
-	private GameplayEventManager _GameplayEventManager => GameplayEventManager.Instance;
-
-	private void OnDrawGizmos()
+	private void Awake()
 	{
-		Gizmos.color = Color.red;
-		Gizmos.DrawWireSphere( transform.position, 1 );
+		ChangePortalDoorColor();
 	}
 
-	private void OnTriggerEnter2D( Collider2D other )
+	public void ChangePortalDoorColor()
 	{
-		GameObject collisionObject = other.gameObject;
-		Rigidbody2D rb2D = collisionObject.GetComponent<Rigidbody2D>();
+		foreach( Transform child in transform )
+		{
+			SpriteRenderer rend = child.GetComponent<SpriteRenderer>();
 
-		if( !ValidateCollision( collisionObject, portableMask ) || !rb2D || !_isActive )
-			return;
+			if( !rend )
+				continue;
 
-		target.DeactivatePortal();
-		target.Teleport( rb2D );
-	}
+			MaterialPropertyBlock block = new();
 
-	private void Teleport( Rigidbody2D rb2D )
-	{
-		rb2D.position = transform.position;
-	}
-
-	private void DeactivatePortal()
-	{
-		_isActive = false;
-		_GameplayEventManager.JumpStarted += ReactivatePortal;
-	}
-
-	private void ReactivatePortal()
-	{
-		_isActive = true;
-		_GameplayEventManager.JumpStarted -= ReactivatePortal;
+			rend.GetPropertyBlock( block );
+			block.SetColor( ColorPropertyID, portalColor );
+			rend.SetPropertyBlock( block );
+		}
 	}
 }

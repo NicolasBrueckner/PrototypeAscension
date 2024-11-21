@@ -6,14 +6,14 @@ using static Utility;
 [ RequireComponent( typeof( Collider2D ) ) ]
 public class BoostPad : MonoBehaviour
 {
-	public  float      boostStrength;
-	public  LayerMask  boostableMask;
-	public  GameObject arrowObject;
+	public float boostStrength;
+	public LayerMask boostableMask;
+	public GameObject arrowObject;
 	private Collider2D _collider;
 
-	private bool        _isValid;
-	private Collider2D  _other;
-	private GameObject  _otherObject;
+	private bool _isValid;
+	private Collider2D _other;
+	private GameObject _otherObject;
 	private Rigidbody2D _otherRb2D;
 
 	private static GameplayEventManager _GameplayEventManager => GameplayEventManager.Instance;
@@ -25,9 +25,9 @@ public class BoostPad : MonoBehaviour
 
 	private void OnTriggerEnter2D( Collider2D other )
 	{
-		_other       = other;
+		_other = other;
 		_otherObject = other.gameObject;
-		_otherRb2D   = other.GetComponent<Rigidbody2D>();
+		_otherRb2D = other.GetComponent<Rigidbody2D>();
 
 		if( ValidateCollision( _otherObject, boostableMask ) || !_otherRb2D )
 			_isValid = true;
@@ -35,10 +35,10 @@ public class BoostPad : MonoBehaviour
 
 	private void OnTriggerExit2D( Collider2D other )
 	{
-		_other       = null;
+		_other = null;
 		_otherObject = null;
-		_otherRb2D   = null;
-		_isValid     = false;
+		_otherRb2D = null;
+		_isValid = false;
 	}
 
 	private void OnTriggerStay2D( Collider2D other )
@@ -49,7 +49,7 @@ public class BoostPad : MonoBehaviour
 
 	private bool IsFullyInside()
 	{
-		Bounds bounds      = _collider.bounds;
+		Bounds bounds = _collider.bounds;
 		Bounds otherBounds = _other.bounds;
 
 		Vector2[] corners = new Vector2[ 4 ];
@@ -63,6 +63,7 @@ public class BoostPad : MonoBehaviour
 
 	private void ApplyBoost( Rigidbody2D rb2D )
 	{
+		Debug.Log( "ApplyBoost" );
 		Vector2 velocity = GetBoostDirection() * boostStrength;
 
 		rb2D.velocity = velocity;
