@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using static Utility;
 
@@ -8,25 +5,17 @@ using static Utility;
 [ RequireComponent( typeof( EdgeCollider2D ) ) ]
 public class LaserComponent : MonoBehaviour
 {
-	public GameObject zapperPrefab;
-	public Vector3[]  points;
-
-	[ SerializeField ] private SerializedDictionary<int, GameObject> _zappers;
+	public GameObject firstZapperObject;
+	public GameObject lastZapperObject;
+	public Vector3[] points;
 
 	private EdgeCollider2D _col;
-	private LineRenderer   _line;
-
-	private void Awake()
-	{
-		_line = GetComponent<LineRenderer>();
-		_col  = GetComponent<EdgeCollider2D>();
-		SetLaserStatus( true );
-	}
+	private LineRenderer _line;
 
 	public void UpdateLaserComponent()
 	{
 		_line = GetComponent<LineRenderer>();
-		_col  = GetComponent<EdgeCollider2D>();
+		_col = GetComponent<EdgeCollider2D>();
 
 		Vector3[] convertedPoints = ConvertPoints();
 
@@ -43,26 +32,8 @@ public class LaserComponent : MonoBehaviour
 
 	private void UpdateZapperObjects()
 	{
-		DeleteExcessZappers();
-
-		foreach( int index in points.Select( ( p, i ) => i ) )
-		{
-			if( !_zappers.ContainsKey( index ) || !_zappers[ index ] )
-				_zappers[ index ] = Instantiate( zapperPrefab, points[ index ], Quaternion.identity, transform );
-			else
-				_zappers[ index ].transform.position = points[ index ];
-		}
-	}
-
-	private void DeleteExcessZappers()
-	{
-		List<int> remove = _zappers.Keys.Except( points.Select( ( p, i ) => i ) ).ToList();
-		foreach( int index in remove )
-		{
-			DestroyImmediate( _zappers[ index ] );
-			_zappers[ index ] = null;
-			_zappers.Remove( index );
-		}
+		firstZapperObject.transform.position = points[ 0 ];
+		lastZapperObject.transform.position = points[ ^1 ];
 	}
 
 	private Vector3[] ConvertPoints()
@@ -73,11 +44,5 @@ public class LaserComponent : MonoBehaviour
 			convertedPoints[ i ] = points[ i ] - transform.position;
 
 		return convertedPoints;
-	}
-
-	public void SetLaserStatus( bool status )
-	{
-		_line.enabled = status;
-		_col.enabled  = status;
 	}
 }
