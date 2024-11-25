@@ -24,6 +24,7 @@ public class AimVisualComponent : MonoBehaviour
 		_InputEventManager.AimPerformed += SetAimPosition;
 		_InputEventManager.JumpPerformed += OnJumpPerformed;
 		_InputEventManager.JumpCanceled += OnJumpCanceled;
+		_InputEventManager.StopJump += OnJumpCanceled;
 	}
 
 	private void Update()

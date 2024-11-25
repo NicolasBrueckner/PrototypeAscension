@@ -3,7 +3,7 @@ using static Utility;
 
 [ RequireComponent( typeof( LineRenderer ) ) ]
 [ RequireComponent( typeof( EdgeCollider2D ) ) ]
-public class LaserComponent : MonoBehaviour
+public class Laser : MonoBehaviour
 {
 	public GameObject firstZapperObject;
 	public GameObject lastZapperObject;

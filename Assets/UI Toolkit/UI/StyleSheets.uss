@@ -1,0 +1,47 @@
+.base-text {
+    -unity-font: url('project://database/Assets/UI%20Toolkit/UI/Pixel%20Bug.otf?fileID=12800000&guid=736183a624308144da6645babe5f3c1e&type=3#Pixel Bug');
+    -unity-font-definition: url('project://database/Assets/UI%20Toolkit/UI/Pixel%20Bug%20SDF.asset?fileID=11400000&guid=ddcda2e51fc5c5349a081dbb0a70f591&type=2#Pixel Bug SDF');
+    -unity-text-align: middle-center;
+    color: rgb(255, 255, 255);
+    -unity-text-outline-width: 0;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.24);
+    letter-spacing: 1px;
+    word-spacing: -15px;
+}
+
+.base-button {
+    background-image: none;
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    -unity-slice-left: 0;
+    -unity-slice-top: 0;
+    -unity-slice-right: 0;
+    -unity-slice-bottom: 0;
+    -unity-slice-scale: 1px;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    border-left-color: rgba(0, 0, 0, 0.39);
+    border-right-color: rgba(0, 0, 0, 0.39);
+    border-top-color: rgba(0, 0, 0, 0.39);
+    border-bottom-color: rgba(0, 0, 0, 0.39);
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+    background-color: rgba(188, 84, 93, 0.2);
+    flex-grow: 1;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.base-button:hover {
+    background-color: rgba(140, 45, 54, 0.31);
+}

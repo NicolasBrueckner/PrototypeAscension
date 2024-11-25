@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/UI/StyleSheets.uss?fileID=7433441132597879392&amp;guid=65386d070531bb7478b29e38b2275456&amp;type=3#StyleSheets" />
+    <ui:VisualElement name="Background" style="flex-grow: 1; justify-content: center;">
+        <ui:Label tabindex="-1" text="Background music by&#10;-Artist-&#10;-Song-" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MusicCredits" class="base-text" />
+        <ui:Label tabindex="-1" text="Font by &#10;Peter Quini&#10;-Pixel Bug-" parse-escape-sequences="true" display-tooltip-when-elided="true" name="FontCredits" class="base-text" />
+    </ui:VisualElement>
+</ui:UXML>

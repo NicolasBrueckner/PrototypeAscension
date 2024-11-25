@@ -1,17 +1,17 @@
 using UnityEditor;
 using UnityEngine;
 
-[ CustomEditor( typeof( LaserComponent ) ) ]
+[ CustomEditor( typeof( Laser ) ) ]
 public class LaserComponentEditor : Editor
 {
-	private const string             SetOriginButtonName = "Reset Points to local Origin";
-	private       LaserComponent     _component;
-	private       SerializedProperty _points;
+	private const string SetOriginButtonName = "Reset Points to local Origin";
+	private Laser _component;
+	private SerializedProperty _points;
 
 	private void OnEnable()
 	{
-		_component = ( LaserComponent )target;
-		_points    = serializedObject.FindProperty( "points" );
+		_component = ( Laser )target;
+		_points = serializedObject.FindProperty( "points" );
 	}
 
 	// updates the "points" array of the target component
@@ -24,9 +24,9 @@ public class LaserComponentEditor : Editor
 
 		for( int i = 0; i < _points.arraySize; i++ )
 		{
-			SerializedProperty point       = _points.GetArrayElementAtIndex( i );
-			Vector3            position    = point.vector3Value;
-			Vector3            newPosition = DrawHandle( position, i );
+			SerializedProperty point = _points.GetArrayElementAtIndex( i );
+			Vector3 position = point.vector3Value;
+			Vector3 newPosition = DrawHandle( position, i );
 
 			point.vector3Value = newPosition;
 		}

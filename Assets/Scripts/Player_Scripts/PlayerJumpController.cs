@@ -148,5 +148,6 @@ public class PlayerJumpController : MonoBehaviour
 	public void OnStopJump()
 	{
 		_isJumpStopped = true;
+		_GameplayEventManager.OnChargeChanged( 0.0f );
 	}
 }

@@ -2,16 +2,15 @@ using Unity.Mathematics;
 using UnityEngine;
 using static Utility;
 
-[RequireComponent( typeof( Camera ) )]
+[ RequireComponent( typeof( Camera ) ) ]
 public class MainCameraManager : MonoBehaviour
 {
-	public static MainCameraManager Instance { get; private set; }
-
 	public Transform targetTransform;
 	public float smoothSpeed;
 	public float offset;
 
 	private Camera _mainCamera;
+	public static MainCameraManager Instance{ get; private set; }
 
 	private void Awake()
 	{
@@ -22,7 +21,7 @@ public class MainCameraManager : MonoBehaviour
 
 	private void Update()
 	{
-		if ( targetTransform )
+		if( targetTransform && targetTransform.position.y >= -3 )
 			FollowTarget();
 	}
 
@@ -31,14 +30,10 @@ public class MainCameraManager : MonoBehaviour
 		Vector3 targetPosition = new( transform.position.x, targetTransform.position.y, offset );
 		Vector3 position;
 
-		if ( smoothSpeed > 0 )
-		{
+		if( smoothSpeed > 0 )
 			position = Vector3.Lerp( transform.position, targetPosition, smoothSpeed * Time.deltaTime );
-		}
 		else
-		{
 			position = targetPosition;
-		}
 
 		transform.position = position;
 	}
