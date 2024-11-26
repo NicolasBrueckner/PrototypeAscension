@@ -5,22 +5,22 @@ using UnityEngine;
 [ RequireComponent( typeof( PlayerCollisionController ) ) ]
 public class PlayerVisualController : MonoBehaviour
 {
-	private static readonly int        EmissionPropertyID = Shader.PropertyToID( "_EmissionFactor" );
-	public                  GameObject visualContainer;
-	public                  float      rotationSpeed;
-	public                  float      maxEmissionStrength;
+	private static readonly int EmissionPropertyID = Shader.PropertyToID( "_EmissionFactor" );
+	public GameObject visualContainer;
+	public float rotationSpeed;
+	public float maxEmissionStrength;
 
-	private bool     _isInAir;
+	private bool _isInAir;
 	private Material _material;
 
-	private static GameplayEventManager _GameplayEventManager => GameplayEventManager.Instance;
+	private static RuntimeEventManager RuntimeEventManager => RuntimeEventManager.Instance;
 
 	private void Awake()
 	{
 		_material = visualContainer.GetComponent<SpriteRenderer>().material;
 
-		_GameplayEventManager.ChargeChanged += OnChargeChanged;
-		_GameplayEventManager.StateChanged  += OnPositionStateChanged;
+		RuntimeEventManager.ChargeChanged += OnChargeChanged;
+		RuntimeEventManager.StateChanged += OnPositionStateChanged;
 	}
 
 	private void FixedUpdate()

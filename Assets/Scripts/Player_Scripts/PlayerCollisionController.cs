@@ -34,19 +34,19 @@ public class PlayerCollisionController : MonoBehaviour
 
 	private Rigidbody2D _rb2D;
 
-	private static GameplayEventManager _GameplayEventManager => GameplayEventManager.Instance;
+	private static RuntimeEventManager RuntimeEventManager => RuntimeEventManager.Instance;
 
 
 	private void Awake()
 	{
 		_rb2D = GetComponent<Rigidbody2D>();
 		_collider = GetComponent<Collider2D>();
-		_GameplayEventManager.JumpStarted += OnJumpStarted;
+		RuntimeEventManager.JumpStarted += OnJumpStarted;
 	}
 
 	private void Start()
 	{
-		_GameplayEventManager.OnStateChanged( PlayerState.InAir );
+		RuntimeEventManager.OnStateChanged( PlayerState.InAir );
 	}
 
 	private void OnCollisionEnter2D( Collision2D collision )
@@ -71,7 +71,7 @@ public class PlayerCollisionController : MonoBehaviour
 
 	private async Task HandleCollision( Collision2D collision, PlayerStateData data )
 	{
-		_GameplayEventManager.OnStateChanged( data.state );
+		RuntimeEventManager.OnStateChanged( data.state );
 
 		using( new DisposableHold( _rb2D ) )
 		{
@@ -90,7 +90,7 @@ public class PlayerCollisionController : MonoBehaviour
 		await DoubleCheckCollision( collision );
 
 		SeparateFromCollision( collision );
-		_GameplayEventManager.OnStateChanged( PlayerState.InAir );
+		RuntimeEventManager.OnStateChanged( PlayerState.InAir );
 	}
 
 	private void SeparateFromCollision( Collision2D collision )
@@ -105,9 +105,9 @@ public class PlayerCollisionController : MonoBehaviour
 
 	private async Task DoubleCheckCollision( Collision2D collision )
 	{
-		if( ValidateVelocity( _rb2D.velocity, GetAverageCollisionNormal( collision ), 90f ) )
+		if( ValidateVelocity( _rb2D.velocity, GetAverageCollisionNormal( collision ), 85f ) )
 			return;
-
+		
 		await Task.Delay( TimeSpan.FromSeconds( Time.fixedDeltaTime ) );
 
 		_collider.enabled = false;

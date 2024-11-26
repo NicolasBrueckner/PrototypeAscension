@@ -1,32 +1,35 @@
 using UnityEngine;
 using static Utility;
 
-public class CheckPointManager : MonoBehaviour
+namespace Manager_Scripts
 {
-	private CheckPoint current;
-	public static CheckPointManager Instance{ get; private set; }
-
-	private void Awake()
+	public class CheckPointManager : MonoBehaviour
 	{
-		Instance = CreateSingleton( Instance, gameObject );
-	}
+		private CheckPoint _current;
+		public static CheckPointManager Instance{ get; private set; }
 
-	public void SetCurrent( CheckPoint current )
-	{
-		this.current = current;
-		Debug.Log( $"current: {current.gameObject.name}" );
-	}
+		private void Awake()
+		{
+			Instance = CreateSingleton( Instance, gameObject );
+		}
 
-	public void Respawn( GameObject playerObject )
-	{
-		PlayerJumpController jumpController = playerObject.GetComponent<PlayerJumpController>();
-		if( !current )
-			Debug.Log( "current is null" );
+		public void SetCurrent( CheckPoint current )
+		{
+			_current = current;
+		}
 
-		if( jumpController )
-			jumpController.OnStopJump();
+		public void Respawn( GameObject playerObject )
+		{
+			PlayerJumpController jumpController = playerObject.GetComponent<PlayerJumpController>();
 
-		TryStopMovement( playerObject );
-		playerObject.transform.position = current.transform.position;
+			if( !_current )
+				return;
+
+			if( jumpController )
+				jumpController.OnStopJump();
+
+			TryStopMovement( playerObject );
+			playerObject.transform.position = _current.transform.position;
+		}
 	}
 }
