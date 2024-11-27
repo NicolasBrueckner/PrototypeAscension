@@ -21,7 +21,7 @@ public class PlayerJumpController : MonoBehaviour
 	private int _remainingJumps;
 
 	private static InputEventManager _InputEventManager => InputEventManager.Instance;
-	private static RuntimeEventManager RuntimeEventManager => RuntimeEventManager.Instance;
+	private static RuntimeEventManager _RuntimeEventManager => RuntimeEventManager.Instance;
 
 	#region Unity Runtime Methods
 
@@ -31,8 +31,8 @@ public class PlayerJumpController : MonoBehaviour
 		_rb2D = GetComponent<Rigidbody2D>();
 
 		_InputEventManager.InputsBound += BindInputEvents;
-		RuntimeEventManager.StateChanged += OnPlayerStateChanged;
-		RuntimeEventManager.BoostActivated += OnBoostActivated;
+		_RuntimeEventManager.StateChanged += OnPlayerStateChanged;
+		_RuntimeEventManager.BoostActivated += OnBoostActivated;
 	}
 
 	#endregion
@@ -95,13 +95,13 @@ public class PlayerJumpController : MonoBehaviour
 	{
 		SetRuntimeSpeed( 1.0f );
 		_isCharging = false;
-		RuntimeEventManager.OnChargeChanged( 0.0f );
+		_RuntimeEventManager.OnChargeChanged( 0.0f );
 
 		if( _isJumpStopped || _remainingJumps <= 0 )
 			return;
 
 		SetJumpForce();
-		RuntimeEventManager.OnJumpStarted();
+		_RuntimeEventManager.OnJumpStarted();
 		_remainingJumps--;
 	}
 
@@ -134,10 +134,10 @@ public class PlayerJumpController : MonoBehaviour
 		_currentJumpStrength = 0;
 		float timer = 0;
 
-		while( _isCharging && !_isJumpStopped && ( timer += Time.fixedUnscaledDeltaTime ) < 1.0f )
+		while( _isCharging && !_isJumpStopped && ( timer += Time.fixedUnscaledDeltaTime ) < 1.5f )
 		{
 			_currentJumpStrength = Mathf.Lerp( _currentJumpStrength, maxJumpStrength, timer );
-			RuntimeEventManager.OnChargeChanged( _currentJumpStrength / maxJumpStrength );
+			_RuntimeEventManager.OnChargeChanged( _currentJumpStrength / maxJumpStrength );
 
 			yield return new WaitForFixedUpdate();
 		}
@@ -148,6 +148,6 @@ public class PlayerJumpController : MonoBehaviour
 	public void OnStopJump()
 	{
 		_isJumpStopped = true;
-		RuntimeEventManager.OnChargeChanged( 0.0f );
+		_RuntimeEventManager.OnChargeChanged( 0.0f );
 	}
 }

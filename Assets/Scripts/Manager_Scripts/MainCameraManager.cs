@@ -30,10 +30,9 @@ public class MainCameraManager : MonoBehaviour
 		Vector3 targetPosition = new( transform.position.x, targetTransform.position.y, offset );
 		Vector3 position;
 
-		if( smoothSpeed > 0 )
-			position = Vector3.Lerp( transform.position, targetPosition, smoothSpeed * Time.deltaTime );
-		else
-			position = targetPosition;
+		position = smoothSpeed > 0
+			           ? Vector3.Lerp( transform.position, targetPosition, smoothSpeed * Time.deltaTime )
+			           : targetPosition;
 
 		transform.position = position;
 	}

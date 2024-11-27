@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4124858498734458939
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3442097889385349392}
+  - component: {fileID: 5808749987361524014}
+  - component: {fileID: 7547503301017724229}
+  m_Layer: 5
+  m_Name: MenuScreenControllerPrefab
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3442097889385349392
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4124858498734458939}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5808749987361524014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4124858498734458939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: 4b771e1ba44ecd542b7fefe33c287122, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: e59c50c02961de24eb895dae5cdfdf2e, type: 3}
+  m_SortingOrder: 0
+--- !u!114 &7547503301017724229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4124858498734458939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20eeb9054b549ba428f1cf993679b5de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rootDocument: {fileID: 5808749987361524014}
+  screensByType:
+    _serializedList:
+    - Key: 0
+      Value:
+        screenAsset: {fileID: 9197481963319205126, guid: 56f259145ba5d564abb1e56c10315bab, type: 3}
+    - Key: 1
+      Value:
+        screenAsset: {fileID: 9197481963319205126, guid: 556412d1924f10a4f843de5d4db473cf, type: 3}
+    - Key: 2
+      Value:
+        screenAsset: {fileID: 9197481963319205126, guid: 0fa6b187146a123418fc16ca1dad1497, type: 3}
+    - Key: 3
+      Value:
+        screenAsset: {fileID: 9197481963319205126, guid: fb42cb190b484fc4d8dcb324dbfa2905, type: 3}

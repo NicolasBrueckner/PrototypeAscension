@@ -1,9 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Toolkit/UI/StyleSheets.uss?fileID=7433441132597879392&amp;guid=65386d070531bb7478b29e38b2275456&amp;type=3#StyleSheets" />
-    <ui:VisualElement name="Background" style="flex-grow: 1;">
-        <ui:VisualElement name="TutorialContainer" style="flex-grow: 1; height: 80%;" />
-        <ui:VisualElement name="ButtonContainer" style="flex-grow: 1; height: 20%; padding-right: 85%;">
-            <ui:Button text="Button" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BackButton" class="base-button" />
+    <ui:VisualElement name="Background" style="flex-grow: 1; background-color: rgb(6, 9, 43); background-image: url(&apos;project://database/Assets/UI%20Toolkit/UI/Tutorial.png?fileID=2800000&amp;guid=949d3ad93927c9a47a36a32f187e0165&amp;type=3#Tutorial&apos;);">
+        <ui:VisualElement name="ButtonContainer" style="flex-grow: 1; height: 20%; padding-right: 85%; padding-top: 45%;">
+            <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BackButton" class="base-button base-text" style="font-size: 20px;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
