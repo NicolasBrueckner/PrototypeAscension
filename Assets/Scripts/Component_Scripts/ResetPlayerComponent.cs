@@ -1,4 +1,3 @@
-using Manager_Scripts;
 using UnityEngine;
 using static Utility;
 
@@ -7,7 +6,7 @@ public class ResetPlayerComponent : MonoBehaviour
 {
 	public LayerMask resetableMask;
 
-	private static CheckPointManager _checkPointManager => CheckPointManager.Instance;
+	private static RuntimeEventManager RuntimeEventManager => RuntimeEventManager.Instance;
 
 	private void OnTriggerEnter2D( Collider2D collision )
 	{
@@ -19,6 +18,6 @@ public class ResetPlayerComponent : MonoBehaviour
 
 	private static void ResetPlayer( GameObject playerObject )
 	{
-		_checkPointManager.Respawn( playerObject );
+		RuntimeEventManager.OnPlayerReset( playerObject );
 	}
 }

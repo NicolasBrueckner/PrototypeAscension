@@ -112,7 +112,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Intesity: 0.1
+    - _Intesity: 0.13
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _PanningSpeed: 1.24
@@ -131,10 +131,10 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _BlinkingSpeed: {r: 10, g: 15, b: 20, a: 30}
+    - _BlinkingSpeed: {r: 13, g: 19, b: 4, a: 9}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _MainColor: {r: 0.5, g: 0, b: 0, a: 0}
+    - _MainColor: {r: 1, g: 0, b: 0, a: 0}
     - _PanningSpeed: {r: -0.1, g: 0.5, b: -0.6, a: 0.8}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []

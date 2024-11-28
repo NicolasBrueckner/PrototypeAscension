@@ -12,6 +12,11 @@ namespace UI_Scripts
 		{
 		}
 
+		private static string TimerString => Timer.TimerText;
+
+		private static Timer Timer => Timer.Instance;
+
+
 		protected override void GetElements()
 		{
 			base.GetElements();
@@ -22,6 +27,8 @@ namespace UI_Scripts
 		protected override void BindElements()
 		{
 			base.BindElements();
+
+			_timerLabel.text = TimerString;
 		}
 	}
 }

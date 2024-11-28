@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Manager_Scripts;
 using UnityEngine;
 using static Utility;
 
@@ -42,6 +41,7 @@ public class PlayerCollisionController : MonoBehaviour
 		_rb2D = GetComponent<Rigidbody2D>();
 		_collider = GetComponent<Collider2D>();
 		RuntimeEventManager.JumpStarted += OnJumpStarted;
+		RuntimeEventManager.PlayerResetEmpty += OnJumpStarted;
 	}
 
 	private void Start()
@@ -107,7 +107,7 @@ public class PlayerCollisionController : MonoBehaviour
 	{
 		if( ValidateVelocity( _rb2D.velocity, GetAverageCollisionNormal( collision ), 85f ) )
 			return;
-		
+
 		await Task.Delay( TimeSpan.FromSeconds( Time.fixedDeltaTime ) );
 
 		_collider.enabled = false;

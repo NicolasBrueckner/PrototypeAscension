@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Manager_Scripts;
 using UnityEngine;
 using static Utility;
 
@@ -20,8 +19,8 @@ public class PlayerJumpController : MonoBehaviour
 
 	private int _remainingJumps;
 
-	private static InputEventManager _InputEventManager => InputEventManager.Instance;
-	private static RuntimeEventManager _RuntimeEventManager => RuntimeEventManager.Instance;
+	private static InputEventManager InputEventManager => InputEventManager.Instance;
+	private static RuntimeEventManager RuntimeEventManager => RuntimeEventManager.Instance;
 
 	#region Unity Runtime Methods
 
@@ -30,19 +29,20 @@ public class PlayerJumpController : MonoBehaviour
 		_remainingJumps = jumpNumber;
 		_rb2D = GetComponent<Rigidbody2D>();
 
-		_InputEventManager.InputsBound += BindInputEvents;
-		_RuntimeEventManager.StateChanged += OnPlayerStateChanged;
-		_RuntimeEventManager.BoostActivated += OnBoostActivated;
+		InputEventManager.InputsBound += BindInputEvents;
+		RuntimeEventManager.StateChanged += OnPlayerStateChanged;
+		RuntimeEventManager.BoostActivated += OnBoostActivated;
+		RuntimeEventManager.PlayerResetEmpty += OnStopJump;
 	}
 
 	#endregion
 
 	private void BindInputEvents()
 	{
-		_InputEventManager.JumpPerformed += OnJumpPerformed;
-		_InputEventManager.JumpCanceled += OnJumpCanceled;
-		_InputEventManager.StopJump += OnStopJump;
-		_InputEventManager.AimPerformed += UpdateMousePosition;
+		InputEventManager.JumpPerformed += OnJumpPerformed;
+		InputEventManager.JumpCanceled += OnJumpCanceled;
+		InputEventManager.StopJump += OnStopJump;
+		InputEventManager.AimPerformed += UpdateMousePosition;
 	}
 
 	private void OnPlayerStateChanged( PlayerState state )
@@ -95,13 +95,13 @@ public class PlayerJumpController : MonoBehaviour
 	{
 		SetRuntimeSpeed( 1.0f );
 		_isCharging = false;
-		_RuntimeEventManager.OnChargeChanged( 0.0f );
+		RuntimeEventManager.OnChargeChanged( 0.0f );
 
 		if( _isJumpStopped || _remainingJumps <= 0 )
 			return;
 
 		SetJumpForce();
-		_RuntimeEventManager.OnJumpStarted();
+		RuntimeEventManager.OnJumpStarted();
 		_remainingJumps--;
 	}
 
@@ -134,10 +134,10 @@ public class PlayerJumpController : MonoBehaviour
 		_currentJumpStrength = 0;
 		float timer = 0;
 
-		while( _isCharging && !_isJumpStopped && ( timer += Time.fixedUnscaledDeltaTime ) < 1.5f )
+		while( _isCharging && !_isJumpStopped && ( timer += Time.fixedUnscaledDeltaTime ) < 2f )
 		{
 			_currentJumpStrength = Mathf.Lerp( _currentJumpStrength, maxJumpStrength, timer );
-			_RuntimeEventManager.OnChargeChanged( _currentJumpStrength / maxJumpStrength );
+			RuntimeEventManager.OnChargeChanged( _currentJumpStrength / maxJumpStrength );
 
 			yield return new WaitForFixedUpdate();
 		}
@@ -148,6 +148,6 @@ public class PlayerJumpController : MonoBehaviour
 	public void OnStopJump()
 	{
 		_isJumpStopped = true;
-		_RuntimeEventManager.OnChargeChanged( 0.0f );
+		RuntimeEventManager.OnChargeChanged( 0.0f );
 	}
 }
