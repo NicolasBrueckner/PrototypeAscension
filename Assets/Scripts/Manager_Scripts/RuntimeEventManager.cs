@@ -19,6 +19,7 @@ public class RuntimeEventManager : MonoBehaviour
 	public event Action JumpStarted;
 	public event Action<GameObject> PlayerReset;
 	public event Action PlayerResetEmpty;
+	public event Action<string> TimerUpdate;
 
 	public void OnGameStarted()
 	{
@@ -54,5 +55,10 @@ public class RuntimeEventManager : MonoBehaviour
 	{
 		PlayerReset?.Invoke( player );
 		PlayerResetEmpty?.Invoke();
+	}
+
+	public void OnTimerUpdate( string value )
+	{
+		TimerUpdate?.Invoke( value );
 	}
 }

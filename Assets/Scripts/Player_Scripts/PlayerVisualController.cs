@@ -1,4 +1,3 @@
-using Manager_Scripts;
 using UnityEngine;
 
 [ RequireComponent( typeof( PlayerJumpController ) ) ]

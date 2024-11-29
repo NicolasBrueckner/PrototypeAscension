@@ -1,34 +1,33 @@
-using Manager_Scripts;
 using UnityEngine.UIElements;
 
-namespace UI_Scripts
+public class HUDMenuScreen : MenuScreen
 {
-	public class HUDMenuScreen : MenuScreen
+	private Label _timerLabel;
+
+	public HUDMenuScreen( VisualTreeAsset asset, MenuScreenType type, MenuScreenController controller ) : base(
+		asset, type, controller )
 	{
-		private Label _timerLabel;
+	}
 
-		public HUDMenuScreen( VisualTreeAsset asset, MenuScreenType type, MenuScreenController controller ) : base(
-			asset, type, controller )
-		{
-		}
-
-		private static string TimerString => Timer.TimerText;
-
-		private static Timer Timer => Timer.Instance;
+	private static RuntimeEventManager RuntimeEventManager => RuntimeEventManager.Instance;
 
 
-		protected override void GetElements()
-		{
-			base.GetElements();
+	protected override void GetElements()
+	{
+		base.GetElements();
 
-			_timerLabel = new Label( "TimerLabel" );
-		}
+		_timerLabel = Root.Q<Label>( "TimerLabel" );
+	}
 
-		protected override void BindElements()
-		{
-			base.BindElements();
+	protected override void BindEvents()
+	{
+		base.BindEvents();
 
-			_timerLabel.text = TimerString;
-		}
+		RuntimeEventManager.TimerUpdate += OnTimerUpdate;
+	}
+
+	private void OnTimerUpdate( string value )
+	{
+		_timerLabel.text = value;
 	}
 }

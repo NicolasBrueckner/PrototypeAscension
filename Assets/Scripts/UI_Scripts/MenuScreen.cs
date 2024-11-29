@@ -1,66 +1,62 @@
 using System;
-using Manager_Scripts;
 using UnityEngine.UIElements;
 
-namespace UI_Scripts
+[ Serializable ]
+public class MenuScreen
 {
-	[ Serializable ]
-	public class MenuScreen
+	public VisualTreeAsset screenAsset;
+
+	protected MenuScreenController MenuScreenController;
+
+	public MenuScreen( VisualTreeAsset asset, MenuScreenType type, MenuScreenController controller )
 	{
-		public VisualTreeAsset screenAsset;
+		SetDefaults( asset, type, controller );
+	}
 
-		protected MenuScreenController MenuScreenController;
+	public VisualElement Root{ get; private set; }
+	public MenuScreenType Type{ get; private set; }
 
-		public MenuScreen( VisualTreeAsset asset, MenuScreenType type, MenuScreenController controller )
-		{
-			SetDefaults( asset, type, controller );
-		}
+	protected virtual void SetDefaults( VisualTreeAsset asset, MenuScreenType type,
+		MenuScreenController controller )
+	{
+		screenAsset = asset;
+		Type = type;
+		MenuScreenController = controller;
 
-		public VisualElement Root{ get; private set; }
-		public MenuScreenType Type{ get; private set; }
+		Root = screenAsset.CloneTree();
 
-		protected virtual void SetDefaults( VisualTreeAsset asset, MenuScreenType type,
-			MenuScreenController controller )
-		{
-			screenAsset = asset;
-			Type = type;
-			MenuScreenController = controller;
+		GetElements();
+		BindElements();
+		BindEvents();
+	}
 
-			Root = screenAsset.CloneTree();
+	public void OnActivation()
+	{
+		OnActivationInternal();
+	}
 
-			GetElements();
-			BindElements();
-			BindEvents();
-		}
+	public void OnDeactivation()
+	{
+		OnDeactivationInternal();
+	}
 
-		public void OnActivation()
-		{
-			OnActivationInternal();
-		}
+	protected virtual void OnActivationInternal()
+	{
+	}
 
-		public void OnDeactivation()
-		{
-			OnDeactivationInternal();
-		}
+	protected virtual void OnDeactivationInternal()
+	{
+	}
 
-		protected virtual void OnActivationInternal()
-		{
-		}
+	protected virtual void GetElements()
+	{
+	}
 
-		protected virtual void OnDeactivationInternal()
-		{
-		}
+	protected virtual void BindElements()
+	{
+	}
 
-		protected virtual void GetElements()
-		{
-		}
-
-		protected virtual void BindElements()
-		{
-		}
-
-		protected virtual void BindEvents()
-		{
-		}
+	protected virtual void BindEvents()
+	{
 	}
 }
