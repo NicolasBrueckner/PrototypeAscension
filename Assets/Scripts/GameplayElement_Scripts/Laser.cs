@@ -9,31 +9,13 @@ public class Laser : MonoBehaviour
 	public GameObject lastZapperObject;
 	public Vector3[] points;
 
-	private EdgeCollider2D _col;
-	private LineRenderer _line;
-
 	public void UpdateLaserComponent()
 	{
-		_line = GetComponent<LineRenderer>();
-		_col = GetComponent<EdgeCollider2D>();
-
 		Vector3[] convertedPoints = ConvertPoints();
 
-		UpdateLaser( convertedPoints );
+		UpdateLineRenderer( convertedPoints );
+		UpdateEdgeCollider( convertedPoints );
 		UpdateZapperObjects();
-	}
-
-	private void UpdateLaser( Vector3[] convertedPoints )
-	{
-		_line.positionCount = convertedPoints.Length;
-		_line.SetPositions( convertedPoints );
-		_col.points = V3ToV2( convertedPoints );
-	}
-
-	private void UpdateZapperObjects()
-	{
-		firstZapperObject.transform.position = points[ 0 ];
-		lastZapperObject.transform.position = points[ ^1 ];
 	}
 
 	private Vector3[] ConvertPoints()
@@ -44,5 +26,36 @@ public class Laser : MonoBehaviour
 			convertedPoints[ i ] = points[ i ] - transform.position;
 
 		return convertedPoints;
+	}
+
+	private static Vector2 AdjustPoint( Vector2 point1, Vector2 point2 )
+	{
+		Vector2 direction = ( point1 - point2 ).normalized;
+
+		return point1 + direction * 0.3f;
+	}
+
+	private void UpdateLineRenderer( Vector3[] convertedPoints )
+	{
+		LineRenderer line = GetComponent<LineRenderer>();
+
+		line.positionCount = convertedPoints.Length;
+		line.SetPositions( convertedPoints );
+	}
+
+	private void UpdateEdgeCollider( Vector3[] convertedPoints )
+	{
+		EdgeCollider2D col = GetComponent<EdgeCollider2D>();
+
+		convertedPoints[ 0 ] = AdjustPoint( convertedPoints[ 0 ], convertedPoints[ 1 ] );
+		convertedPoints[ ^1 ] = AdjustPoint( convertedPoints[ ^1 ], convertedPoints[ ^2 ] );
+
+		col.points = V3ToV2( convertedPoints );
+	}
+
+	private void UpdateZapperObjects()
+	{
+		firstZapperObject.transform.position = points[ 0 ];
+		lastZapperObject.transform.position = points[ ^1 ];
 	}
 }
