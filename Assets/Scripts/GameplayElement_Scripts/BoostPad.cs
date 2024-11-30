@@ -62,7 +62,6 @@ public class BoostPad : MonoBehaviour
 
 	private void ApplyBoost( Rigidbody2D rb2D )
 	{
-		Debug.Log( "ApplyBoost" );
 		Vector2 velocity = GetBoostDirection() * boostStrength;
 
 		rb2D.velocity = velocity;

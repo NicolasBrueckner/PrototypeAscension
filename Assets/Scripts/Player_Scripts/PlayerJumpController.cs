@@ -14,6 +14,7 @@ public class PlayerJumpController : MonoBehaviour
 	private PlayerState _currentState;
 	private bool _isCharging;
 	private bool _isJumpStopped;
+	private Vector2 _jumpDirection;
 	private Vector2 _mousePosition;
 	private Rigidbody2D _rb2D;
 
@@ -33,6 +34,7 @@ public class PlayerJumpController : MonoBehaviour
 		RuntimeEventManager.StateChanged += OnPlayerStateChanged;
 		RuntimeEventManager.BoostActivated += OnBoostActivated;
 		RuntimeEventManager.PlayerResetEmpty += OnStopJump;
+		RuntimeEventManager.JumpInvalid += OnJumpInvalid;
 	}
 
 	#endregion
@@ -53,12 +55,8 @@ public class PlayerJumpController : MonoBehaviour
 		{
 			case PlayerState.OnGround:
 				_remainingJumps = jumpNumber;
-				if( _isCharging )
-					_chargeJumpCoroutine ??= StartCoroutine( ChargeJumpCoroutine() );
 				break;
 			case PlayerState.OnWall:
-				if( _isCharging )
-					_chargeJumpCoroutine ??= StartCoroutine( ChargeJumpCoroutine() );
 				break;
 			case PlayerState.InAir:
 				if( _remainingJumps == jumpNumber )
@@ -73,6 +71,11 @@ public class PlayerJumpController : MonoBehaviour
 	{
 		if( _remainingJumps == 0 )
 			_remainingJumps = 1;
+	}
+
+	private void OnJumpInvalid()
+	{
+		_remainingJumps++;
 	}
 
 	private void OnJumpPerformed()
@@ -94,9 +97,12 @@ public class PlayerJumpController : MonoBehaviour
 	private void OnJumpCanceled()
 	{
 		SetRuntimeSpeed( 1.0f );
+
 		_isCharging = false;
+		_jumpDirection = SetJumpDirection();
+
 		RuntimeEventManager.OnChargeChanged( 0.0f );
-		RuntimeEventManager.OnJumpStarted();
+		RuntimeEventManager.OnJumpStarted( _jumpDirection );
 
 		if( _isJumpStopped || _remainingJumps <= 0 )
 			return;
@@ -112,8 +118,7 @@ public class PlayerJumpController : MonoBehaviour
 
 	private void SetJumpForce()
 	{
-		Vector2 direction = SetJumpDirection();
-		Vector2 velocity = direction * _currentJumpStrength;
+		Vector2 velocity = _jumpDirection * _currentJumpStrength;
 
 		if( _currentState == PlayerState.InAir )
 			_rb2D.velocity = velocity;

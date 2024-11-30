@@ -25,7 +25,6 @@ public struct PlayerStateData
 public class PlayerCollisionController : MonoBehaviour
 {
 	public List<PlayerStateData> states;
-	private Collider2D _collider;
 	private Collision2D _currentCollision;
 	private bool _isColliding;
 
@@ -35,13 +34,11 @@ public class PlayerCollisionController : MonoBehaviour
 
 	private static RuntimeEventManager RuntimeEventManager => RuntimeEventManager.Instance;
 
-
 	private void Awake()
 	{
 		_rb2D = GetComponent<Rigidbody2D>();
-		_collider = GetComponent<Collider2D>();
 		RuntimeEventManager.JumpStarted += OnJumpStarted;
-		RuntimeEventManager.PlayerResetEmpty += OnJumpStarted;
+		RuntimeEventManager.PlayerResetEmpty += OnPlayerReset;
 	}
 
 	private void Start()
@@ -55,7 +52,16 @@ public class PlayerCollisionController : MonoBehaviour
 			return;
 
 		_isColliding = true;
+		_currentCollision = collision;
+
 		CheckCollision( collision );
+	}
+
+	// This event function is necessary to ensure continuous update of "_currentCollision.contacts".
+	// Unity's physics system does not automatically update collision data so this explicit call is
+	// important. Removing this will interfere with the functionality of "OnJumpStarted()".
+	private void OnCollisionStay2D( Collision2D other )
+	{
 	}
 
 	private async void CheckCollision( Collision2D collision )
@@ -87,8 +93,9 @@ public class PlayerCollisionController : MonoBehaviour
 		}
 
 		SeparateFromCollision( collision );
+
 		_isColliding = false;
-		await DoubleCheckCollision( collision );
+		_currentCollision = null;
 
 		RuntimeEventManager.OnStateChanged( PlayerState.InAir );
 	}
@@ -101,18 +108,6 @@ public class PlayerCollisionController : MonoBehaviour
 		Vector2 normal = GetAverageCollisionNormal( collision );
 
 		_rb2D.AddForce( normal * 0.2f, ForceMode2D.Impulse );
-	}
-
-	private async Task DoubleCheckCollision( Collision2D collision )
-	{
-		if( ValidateVelocity( _rb2D.velocity, GetAverageCollisionNormal( collision ), 85f ) )
-			return;
-
-		await Task.Delay( TimeSpan.FromSeconds( Time.fixedDeltaTime ) );
-
-		_collider.enabled = false;
-		await Task.Delay( TimeSpan.FromSeconds( Time.fixedDeltaTime ) );
-		_collider.enabled = true;
 	}
 
 	private async Task HoldIndefinitely()
@@ -131,7 +126,18 @@ public class PlayerCollisionController : MonoBehaviour
 		}
 	}
 
-	private void OnJumpStarted()
+	private void OnJumpStarted( Vector2 expectedDirection )
+	{
+		if( ValidateVelocity( expectedDirection, GetAverageCollisionNormal( _currentCollision ), 85f ) )
+		{
+			RuntimeEventManager.OnJumpInvalid();
+			return;
+		}
+
+		_isHolding = false;
+	}
+
+	private void OnPlayerReset()
 	{
 		_isHolding = false;
 	}

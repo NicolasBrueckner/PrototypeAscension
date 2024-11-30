@@ -9,7 +9,7 @@ public class PortalDoor : MonoBehaviour
 
 	private bool _isActive = true;
 
-	private RuntimeEventManager RuntimeEventManager => RuntimeEventManager.Instance;
+	private static RuntimeEventManager RuntimeEventManager => RuntimeEventManager.Instance;
 
 
 	private void OnTriggerEnter2D( Collider2D other )
@@ -32,12 +32,12 @@ public class PortalDoor : MonoBehaviour
 	private void DeactivatePortal()
 	{
 		_isActive = false;
-		RuntimeEventManager.JumpStarted += ReactivatePortal;
+		RuntimeEventManager.JumpStartedEmpty += ReactivatePortal;
 	}
 
 	private void ReactivatePortal()
 	{
 		_isActive = true;
-		RuntimeEventManager.JumpStarted -= ReactivatePortal;
+		RuntimeEventManager.JumpStartedEmpty -= ReactivatePortal;
 	}
 }
