@@ -126,9 +126,9 @@ public class PlayerCollisionController : MonoBehaviour
 		}
 	}
 
-	private void OnJumpStarted( Vector2 expectedDirection )
+	private void OnJumpStarted( Vector2 expectedVelocity )
 	{
-		if( ValidateVelocity( expectedDirection, GetAverageCollisionNormal( _currentCollision ), 85f ) )
+		if( !ValidateVelocity( expectedVelocity, GetAverageCollisionNormal( _currentCollision ), 85f ) )
 		{
 			RuntimeEventManager.OnJumpInvalid();
 			return;

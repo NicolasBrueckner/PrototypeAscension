@@ -105,9 +105,13 @@ public class PlayerJumpController : MonoBehaviour
 		_jumpDirection = SetJumpDirection();
 
 		RuntimeEventManager.OnChargeChanged( 0.0f );
+
+		if( _isJumpStopped )
+			return;
+
 		RuntimeEventManager.OnJumpStarted( _jumpDirection );
 
-		if( _isJumpStopped || _remainingJumps <= 0 )
+		if( _remainingJumps <= 0 )
 			return;
 
 		SetJumpForce();
@@ -139,7 +143,7 @@ public class PlayerJumpController : MonoBehaviour
 
 	private IEnumerator ChargeJumpCoroutine()
 	{
-		_currentJumpStrength = 0;
+		_currentJumpStrength = 1.0f;
 		float timer = 0;
 
 		while( _isCharging && !_isJumpStopped && ( timer += Time.fixedUnscaledDeltaTime ) < 2f )
