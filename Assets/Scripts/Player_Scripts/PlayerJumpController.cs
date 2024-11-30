@@ -47,6 +47,7 @@ public class PlayerJumpController : MonoBehaviour
 		InputEventManager.AimPerformed += UpdateMousePosition;
 	}
 
+	// coroutine is started so charge can start immediately after touching surface while already holding charge button
 	private void OnPlayerStateChanged( PlayerState state )
 	{
 		_currentState = state;
@@ -55,8 +56,10 @@ public class PlayerJumpController : MonoBehaviour
 		{
 			case PlayerState.OnGround:
 				_remainingJumps = jumpNumber;
+				_chargeJumpCoroutine ??= StartCoroutine( ChargeJumpCoroutine() );
 				break;
 			case PlayerState.OnWall:
+				_chargeJumpCoroutine ??= StartCoroutine( ChargeJumpCoroutine() );
 				break;
 			case PlayerState.InAir:
 				if( _remainingJumps == jumpNumber )
