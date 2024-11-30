@@ -86,10 +86,10 @@ public class PlayerCollisionController : MonoBehaviour
 			}
 		}
 
+		SeparateFromCollision( collision );
 		_isColliding = false;
 		await DoubleCheckCollision( collision );
 
-		SeparateFromCollision( collision );
 		RuntimeEventManager.OnStateChanged( PlayerState.InAir );
 	}
 
