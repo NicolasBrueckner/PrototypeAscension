@@ -1,18 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using static Utility;
 
+[ RequireComponent( typeof( BoxCollider2D ) ) ]
 public class Goal : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+	public LayerMask finishableMask;
+	private static RuntimeEventManager RuntimeEventManager => RuntimeEventManager.Instance;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	private void OnTriggerEnter2D( Collider2D other )
+	{
+		if( ValidateCollision( other.gameObject, finishableMask ) )
+			RuntimeEventManager.OnGameEnded();
+	}
 }
