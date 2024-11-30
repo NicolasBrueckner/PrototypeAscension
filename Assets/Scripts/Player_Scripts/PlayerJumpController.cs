@@ -96,12 +96,12 @@ public class PlayerJumpController : MonoBehaviour
 		SetRuntimeSpeed( 1.0f );
 		_isCharging = false;
 		RuntimeEventManager.OnChargeChanged( 0.0f );
+		RuntimeEventManager.OnJumpStarted();
 
 		if( _isJumpStopped || _remainingJumps <= 0 )
 			return;
 
 		SetJumpForce();
-		RuntimeEventManager.OnJumpStarted();
 		_remainingJumps--;
 	}
 
