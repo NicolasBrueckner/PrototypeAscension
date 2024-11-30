@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7306314292048763056}
   - component: {fileID: 5649398036349472458}
   - component: {fileID: 4881617374788470140}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: GoalPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62,7 +62,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
