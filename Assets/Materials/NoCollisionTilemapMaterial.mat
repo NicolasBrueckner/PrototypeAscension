@@ -53,7 +53,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _EmissionFactor: 0.8
+    - _EmissionFactor: 1.2
     m_Colors:
     - _EmissionColor: {r: 5.99216, g: 5.99216, b: 5.99216, a: 1}
   m_BuildTextureStacks: []
