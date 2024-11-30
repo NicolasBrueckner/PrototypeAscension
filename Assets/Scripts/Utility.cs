@@ -113,6 +113,6 @@ public static class Utility
 
 		Debug.Log( $"angle: {angle}" );
 
-		return angle >= threshold;
+		return angle <= threshold;
 	}
 }

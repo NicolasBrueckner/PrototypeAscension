@@ -9,6 +9,12 @@ public class Laser : MonoBehaviour
 	public GameObject lastZapperObject;
 	public Vector3[] points;
 
+
+	private void Awake()
+	{
+		UpdateLaserComponent();
+	}
+
 	public void UpdateLaserComponent()
 	{
 		Vector3[] convertedPoints = ConvertPoints();
