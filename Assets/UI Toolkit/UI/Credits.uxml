@@ -1,8 +1,12 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Toolkit/UI/StyleSheets.uss?fileID=7433441132597879392&amp;guid=65386d070531bb7478b29e38b2275456&amp;type=3#StyleSheets" />
-    <ui:VisualElement name="Background" style="flex-grow: 1; justify-content: center; background-image: url(&apos;project://database/Assets/UI%20Toolkit/UI/Credits.png?fileID=2800000&amp;guid=9edc24c052fdc1648999c7e8fefb0de6&amp;type=3#Credits&apos;);">
-        <ui:VisualElement name="ButtonContainer" style="flex-grow: 1; height: 20%; padding-right: 85%; padding-top: 45%;">
+    <ui:VisualElement name="Background" style="flex-grow: 1; justify-content: center; background-image: url(&apos;project://database/Assets/UI%20Toolkit/UI/Background.png?fileID=2800000&amp;guid=84cca7c7baf601141be7663436e8f042&amp;type=3#Background&apos;); flex-direction: row; -unity-background-image-tint-color: rgb(255, 255, 255);">
+        <ui:VisualElement name="ButtonContainer" style="flex-grow: 1; height: auto; padding-right: 0; padding-top: 45%; width: 15%; padding-bottom: 0; padding-left: 0;">
             <ui:Button text="Back" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BackButton" class="base-button base-text" style="flex-shrink: 1; align-self: stretch; width: auto; height: auto; font-size: 20px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="LabelContainer" style="flex-grow: 1; width: 85%; justify-content: space-around;">
+            <ui:Label tabindex="-1" text="Background Music&#10;Collateral Damage, Car Chase Theme&#10;- Composed by One Man Symphony -" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MusicCedits" class="base-text" style="font-size: 30%;" />
+            <ui:Label tabindex="-1" text="Font&#10;Pixel Bug&#10;- Peter Quini -" parse-escape-sequences="true" display-tooltip-when-elided="true" name="FontCredits" class="base-text" style="font-size: 30%;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
