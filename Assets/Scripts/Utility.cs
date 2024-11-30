@@ -35,7 +35,7 @@ public static class Utility
 
 	public static void SetRuntimeSpeed( float value )
 	{
-		Time.timeScale      = value;
+		Time.timeScale = value;
 		Time.fixedDeltaTime = 0.02f * Time.timeScale;
 	}
 
@@ -81,6 +81,9 @@ public static class Utility
 	{
 		Vector2 normal = Vector2.zero;
 
+		if( collision == null || collision.contacts.Length == 0 )
+			return normal;
+
 		foreach( ContactPoint2D point in collision.contacts )
 			normal += point.normal;
 
@@ -96,10 +99,10 @@ public static class Utility
 		if( !effector || !effector.useOneWay )
 			return false;
 
-		Vector2 normal       = collision.contacts[ 0 ].normal;
-		Vector2 up           = effector.transform.up;
-		float   angle        = effector.surfaceArc / 2.0f;
-		float   angleBetween = Vector2.Angle( normal, up );
+		Vector2 normal = collision.contacts[ 0 ].normal;
+		Vector2 up = effector.transform.up;
+		float angle = effector.surfaceArc / 2.0f;
+		float angleBetween = Vector2.Angle( normal, up );
 
 		return !( angleBetween <= angle );
 	}
@@ -108,6 +111,8 @@ public static class Utility
 	{
 		float angle = Vector2.Angle( velocity, surfaceNormal );
 
-		return angle <= threshold;
+		Debug.Log( $"angle: {angle}" );
+
+		return angle >= threshold;
 	}
 }

@@ -16,7 +16,9 @@ public class RuntimeEventManager : MonoBehaviour
 	public event Action<PlayerState> StateChanged;
 	public event Action BoostActivated;
 	public event Action<float> ChargeChanged;
-	public event Action JumpStarted;
+	public event Action<Vector2> JumpStarted;
+	public event Action JumpStartedEmpty;
+	public event Action JumpInvalid;
 	public event Action<GameObject> PlayerReset;
 	public event Action PlayerResetEmpty;
 	public event Action<string> TimerUpdate;
@@ -46,9 +48,15 @@ public class RuntimeEventManager : MonoBehaviour
 		ChargeChanged?.Invoke( value );
 	}
 
-	public void OnJumpStarted()
+	public void OnJumpStarted( Vector2 jumpDirection )
 	{
-		JumpStarted?.Invoke();
+		JumpStarted?.Invoke( jumpDirection );
+		JumpStartedEmpty?.Invoke();
+	}
+
+	public void OnJumpInvalid()
+	{
+		JumpInvalid?.Invoke();
 	}
 
 	public void OnPlayerReset( GameObject player )
