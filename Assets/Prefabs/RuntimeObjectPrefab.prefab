@@ -153,6 +153,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3522047582226172604}
     m_Modifications:
+    - target: {fileID: 1978511989941119353, guid: 66979d91946307844b851adde433f06b, type: 3}
+      propertyPath: m_Size.y
+      value: 4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1978511989941119353, guid: 66979d91946307844b851adde433f06b, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 3075507525101191281, guid: 66979d91946307844b851adde433f06b, type: 3}
       propertyPath: m_Name
       value: MiscellaneousContainer
@@ -835,6 +843,14 @@ PrefabInstance:
     - target: {fileID: 7018885873241238745, guid: 1e3044b7f50fb89428fee708e6e1bec3, type: 3}
       propertyPath: boostStrength
       value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 7106195614664228066, guid: 1e3044b7f50fb89428fee708e6e1bec3, type: 3}
+      propertyPath: m_Size.y
+      value: 6.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7106195614664228066, guid: 1e3044b7f50fb89428fee708e6e1bec3, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.25
       objectReference: {fileID: 0}
     - target: {fileID: 7559301847240051358, guid: 1e3044b7f50fb89428fee708e6e1bec3, type: 3}
       propertyPath: m_Size.x
