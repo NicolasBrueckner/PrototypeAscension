@@ -1,6 +1,15 @@
 using System;
 using UnityEngine.UIElements;
 
+public enum MenuScreenType
+{
+	Main,
+	HUD,
+	Credits,
+	Tutorial,
+	Win,
+}
+
 [ Serializable ]
 public class MenuScreen
 {

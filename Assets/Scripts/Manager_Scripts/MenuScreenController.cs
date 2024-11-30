@@ -3,14 +3,6 @@ using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public enum MenuScreenType
-{
-	Main,
-	HUD,
-	Credits,
-	Tutorial,
-}
-
 public class MenuScreenController : MonoBehaviour
 {
 	public UIDocument rootDocument;
