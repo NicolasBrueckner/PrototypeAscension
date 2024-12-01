@@ -31,7 +31,7 @@ public class PlayerJumpController : MonoBehaviour
 		InputEventManager.InputsBound += BindInputEvents;
 		RuntimeEventManager.StateChanged += OnPlayerStateChanged;
 		RuntimeEventManager.BoostActivated += OnBoostActivated;
-		RuntimeEventManager.PlayerResetEmpty += OnStopJump;
+		RuntimeEventManager.PlayerDeathInitiated += OnStopJump;
 		RuntimeEventManager.JumpInvalid += OnJumpInvalid;
 	}
 
@@ -140,14 +140,14 @@ public class PlayerJumpController : MonoBehaviour
 	private IEnumerator ChargeJumpCoroutine()
 	{
 		const float startingJumpStrength = 2.0f;
-		const float timeToCharge = 0.5f;
+		const float chargeDuration = 0.5f;
 		float timer = 0;
 
 		while( _isCharging && !_isJumpStopped && _currentJumpStrength < maxJumpStrength )
 		{
 			timer += Time.fixedUnscaledDeltaTime;
 
-			_currentJumpStrength = Mathf.Lerp( startingJumpStrength, maxJumpStrength, timer / timeToCharge );
+			_currentJumpStrength = Mathf.Lerp( startingJumpStrength, maxJumpStrength, timer / chargeDuration );
 			RuntimeEventManager.OnChargeChanged( _currentJumpStrength / maxJumpStrength );
 
 			yield return new WaitForFixedUpdate();

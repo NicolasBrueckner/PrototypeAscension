@@ -10,14 +10,12 @@ public class ResetPlayerComponent : MonoBehaviour
 
 	private void OnTriggerEnter2D( Collider2D collision )
 	{
-		GameObject collisionObject = collision.gameObject;
-
-		if( ValidateCollision( collisionObject, resetableMask ) )
-			ResetPlayer( collisionObject );
+		if( ValidateCollision( collision.gameObject, resetableMask ) )
+			ResetPlayer();
 	}
 
-	private static void ResetPlayer( GameObject playerObject )
+	private static void ResetPlayer()
 	{
-		RuntimeEventManager.OnPlayerReset( playerObject );
+		RuntimeEventManager.OnPlayerDeathInitiated();
 	}
 }

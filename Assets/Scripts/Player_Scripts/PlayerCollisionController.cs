@@ -38,7 +38,8 @@ public class PlayerCollisionController : MonoBehaviour
 	{
 		_rb2D = GetComponent<Rigidbody2D>();
 		RuntimeEventManager.JumpStarted += OnJumpStarted;
-		RuntimeEventManager.PlayerResetEmpty += OnPlayerReset;
+		RuntimeEventManager.PlayerDeathInitiated += OnPlayerDeathInitiated;
+		RuntimeEventManager.PlayerDeathCompletedEmpty += OnPlayerDeathCompleted;
 	}
 
 	private void Start()
@@ -142,9 +143,15 @@ public class PlayerCollisionController : MonoBehaviour
 		_isHolding = false;
 	}
 
-	private void OnPlayerReset()
+	private void OnPlayerDeathInitiated()
 	{
 		_isHolding = false;
+		_rb2D.drag = float.MaxValue;
+	}
+
+	private void OnPlayerDeathCompleted()
+	{
+		_rb2D.drag = 0.0f;
 	}
 }
 

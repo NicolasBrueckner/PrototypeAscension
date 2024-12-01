@@ -19,8 +19,9 @@ public class RuntimeEventManager : MonoBehaviour
 	public event Action<Vector2> JumpStarted;
 	public event Action JumpStartedEmpty;
 	public event Action JumpInvalid;
-	public event Action<GameObject> PlayerReset;
-	public event Action PlayerResetEmpty;
+	public event Action PlayerDeathInitiated;
+	public event Action<GameObject> PlayerDeathCompleted;
+	public event Action PlayerDeathCompletedEmpty;
 	public event Action<string> TimerUpdate;
 
 	public void OnGameStarted()
@@ -59,10 +60,15 @@ public class RuntimeEventManager : MonoBehaviour
 		JumpInvalid?.Invoke();
 	}
 
-	public void OnPlayerReset( GameObject player )
+	public void OnPlayerDeathInitiated()
 	{
-		PlayerReset?.Invoke( player );
-		PlayerResetEmpty?.Invoke();
+		PlayerDeathInitiated?.Invoke();
+	}
+
+	public void OnPlayerDeathCompleted( GameObject player )
+	{
+		PlayerDeathCompleted?.Invoke( player );
+		PlayerDeathCompletedEmpty?.Invoke();
 	}
 
 	public void OnTimerUpdate( string value )

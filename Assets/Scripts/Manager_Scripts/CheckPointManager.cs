@@ -12,7 +12,7 @@ public class CheckPointManager : MonoBehaviour
 	{
 		Instance = CreateSingleton( Instance, gameObject );
 
-		RuntimeEventManager.PlayerReset += OnPlayerReset;
+		RuntimeEventManager.PlayerDeathCompleted += OnPlayerDeathCompleted;
 	}
 
 	public void SetCurrent( CheckPoint current )
@@ -20,7 +20,7 @@ public class CheckPointManager : MonoBehaviour
 		_current = current;
 	}
 
-	public void OnPlayerReset( GameObject playerObject )
+	public void OnPlayerDeathCompleted( GameObject playerObject )
 	{
 		PlayerJumpController jumpController = playerObject.GetComponent<PlayerJumpController>();
 
