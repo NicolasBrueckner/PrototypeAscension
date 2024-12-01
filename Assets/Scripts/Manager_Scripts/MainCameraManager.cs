@@ -41,7 +41,7 @@ public class MainCameraManager : MonoBehaviour
 		Vector3 targetPosition = new( transform.position.x, targetTransform.position.y, offset );
 
 		Vector3 position = smoothSpeed > 0
-			                   ? Vector3.Lerp( transform.position, targetPosition,
+			                   ? Vector3.MoveTowards( transform.position, targetPosition,
 				                   smoothSpeed * Time.fixedUnscaledDeltaTime )
 			                   : targetPosition;
 
