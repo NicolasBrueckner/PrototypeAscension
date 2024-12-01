@@ -28,7 +28,7 @@ public class PlayerVisualController : MonoBehaviour
 			visualContainer.transform.Rotate( Vector3.forward, rotationSpeed );
 	}
 
-	//spin when in Air
+	//sets flag for spinning when in Air
 	private void OnPositionStateChanged( PlayerState state )
 	{
 		_isInAir = state == PlayerState.InAir;

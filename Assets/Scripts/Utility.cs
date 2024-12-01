@@ -113,8 +113,6 @@ public static class Utility
 	{
 		float angle = Vector2.Angle( velocity, surfaceNormal );
 
-		Debug.Log( $"angle: {angle}" );
-
 		return angle <= threshold;
 	}
 }
