@@ -1,5 +1,7 @@
 using System;
+using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
 
 public static class Utility
@@ -114,5 +116,23 @@ public static class Utility
 		Debug.Log( $"angle: {angle}" );
 
 		return angle <= threshold;
+	}
+}
+
+public class DisposableStopwatch : IDisposable
+{
+	private readonly Stopwatch _stopwatch;
+
+	public DisposableStopwatch()
+	{
+		_stopwatch = new();
+		_stopwatch.Start();
+	}
+
+	public void Dispose()
+	{
+		_stopwatch.Stop();
+		long elapsed = _stopwatch.ElapsedMilliseconds;
+		Debug.Log( $"elapsed: {elapsed} ms" );
 	}
 }

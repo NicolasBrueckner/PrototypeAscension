@@ -6012,7 +6012,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7625542447614945381, guid: edbdc44b99953484982ff00098a280b6, type: 3}
       propertyPath: states.Array.data[1].holdTime
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7625542447614945381, guid: edbdc44b99953484982ff00098a280b6, type: 3}
       propertyPath: states.Array.data[0].Mask.m_Bits
@@ -19420,7 +19420,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7455078166443141698, guid: 38021bbfd773e0242bab077d9b4e6039, type: 3}
       propertyPath: orthographic size
-      value: 5.06
+      value: 5.07
       objectReference: {fileID: 0}
     - target: {fileID: 8109999831334003032, guid: 38021bbfd773e0242bab077d9b4e6039, type: 3}
       propertyPath: offset

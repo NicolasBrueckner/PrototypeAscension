@@ -126,9 +126,14 @@ public class PlayerCollisionController : MonoBehaviour
 		}
 	}
 
+	// magic numbers are play tested thresholds so collision handling behaves as expected with
+	// very steep jumping angles. The optimal threshold is influenced by the surface normal.
 	private void OnJumpStarted( Vector2 expectedVelocity )
 	{
-		if( !ValidateVelocity( expectedVelocity, GetAverageCollisionNormal( _currentCollision ), 85f ) )
+		Vector2 averageNormal = GetAverageCollisionNormal( _currentCollision );
+		float threshold = Vector2.Angle( Vector2.up, averageNormal ) < 90.0f ? 85.0f : 89.0f;
+
+		if( !ValidateVelocity( expectedVelocity, averageNormal, threshold ) )
 		{
 			RuntimeEventManager.OnJumpInvalid();
 			return;

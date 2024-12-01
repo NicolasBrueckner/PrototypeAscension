@@ -29,7 +29,7 @@ public class MainCameraManager : MonoBehaviour
 
 	private void Update()
 	{
-		if( targetTransform && targetTransform.position.y >= -3 )
+		if( targetTransform )
 			FollowTarget();
 
 		if( zapperMaterial )
@@ -44,6 +44,7 @@ public class MainCameraManager : MonoBehaviour
 			                   ? Vector3.Lerp( transform.position, targetPosition, smoothSpeed * Time.deltaTime )
 			                   : targetPosition;
 
+		position.y = Mathf.Max( position.y, -2.93f ); // magic number because of specific lower grid end
 		transform.position = position;
 	}
 

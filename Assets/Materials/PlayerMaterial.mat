@@ -78,7 +78,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _EmissionFactor: 5
+    - _EmissionFactor: 1
     - _EmissionFaktor: 2
     - _EnableExternalAlpha: 0
     m_Colors:

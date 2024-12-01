@@ -23,8 +23,6 @@ public class PlayerJumpController : MonoBehaviour
 	private static InputEventManager InputEventManager => InputEventManager.Instance;
 	private static RuntimeEventManager RuntimeEventManager => RuntimeEventManager.Instance;
 
-	#region Unity Runtime Methods
-
 	private void Awake()
 	{
 		_remainingJumps = jumpNumber;
@@ -36,8 +34,6 @@ public class PlayerJumpController : MonoBehaviour
 		RuntimeEventManager.PlayerResetEmpty += OnStopJump;
 		RuntimeEventManager.JumpInvalid += OnJumpInvalid;
 	}
-
-	#endregion
 
 	private void BindInputEvents()
 	{
@@ -106,21 +102,29 @@ public class PlayerJumpController : MonoBehaviour
 
 		RuntimeEventManager.OnChargeChanged( 0.0f );
 
-		if( _isJumpStopped )
+		if( _isJumpStopped || _remainingJumps <= 0 )
+		{
+			_currentJumpStrength = 0.0f;
 			return;
+		}
 
 		RuntimeEventManager.OnJumpStarted( _jumpDirection );
-
-		if( _remainingJumps <= 0 )
-			return;
-
-		SetJumpForce();
-		_remainingJumps--;
+		ExecuteJump();
 	}
 
-	private void UpdateMousePosition( Vector2 worldPosition )
+	private Vector2 SetJumpDirection()
 	{
-		_mousePosition = worldPosition;
+		Vector2 direction = _mousePosition - ( Vector2 )gameObject.transform.position;
+		direction.Normalize();
+
+		return direction;
+	}
+
+	private void ExecuteJump()
+	{
+		SetJumpForce();
+		_remainingJumps--;
+		_currentJumpStrength = 0.0f;
 	}
 
 	private void SetJumpForce()
@@ -133,22 +137,17 @@ public class PlayerJumpController : MonoBehaviour
 			_rb2D.velocity += velocity;
 	}
 
-	private Vector2 SetJumpDirection()
-	{
-		Vector2 direction = _mousePosition - ( Vector2 )gameObject.transform.position;
-		direction.Normalize();
-
-		return direction;
-	}
-
 	private IEnumerator ChargeJumpCoroutine()
 	{
-		_currentJumpStrength = 1.0f;
+		const float startingJumpStrength = 2.0f;
+		const float timeToCharge = 0.5f;
 		float timer = 0;
 
-		while( _isCharging && !_isJumpStopped && ( timer += Time.fixedUnscaledDeltaTime ) < 2f )
+		while( _isCharging && !_isJumpStopped && _currentJumpStrength < maxJumpStrength )
 		{
-			_currentJumpStrength = Mathf.Lerp( _currentJumpStrength, maxJumpStrength, timer );
+			timer += Time.fixedUnscaledDeltaTime;
+
+			_currentJumpStrength = Mathf.Lerp( startingJumpStrength, maxJumpStrength, timer / timeToCharge );
 			RuntimeEventManager.OnChargeChanged( _currentJumpStrength / maxJumpStrength );
 
 			yield return new WaitForFixedUpdate();
@@ -161,5 +160,10 @@ public class PlayerJumpController : MonoBehaviour
 	{
 		_isJumpStopped = true;
 		RuntimeEventManager.OnChargeChanged( 0.0f );
+	}
+
+	private void UpdateMousePosition( Vector2 worldPosition )
+	{
+		_mousePosition = worldPosition;
 	}
 }
