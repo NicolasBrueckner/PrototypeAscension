@@ -27,7 +27,7 @@ public class MainCameraManager : MonoBehaviour
 		RuntimeEventManager.GameEnded += OnGameEnded;
 	}
 
-	private void Update()
+	private void LateUpdate()
 	{
 		if( targetTransform )
 			FollowTarget();
@@ -41,7 +41,8 @@ public class MainCameraManager : MonoBehaviour
 		Vector3 targetPosition = new( transform.position.x, targetTransform.position.y, offset );
 
 		Vector3 position = smoothSpeed > 0
-			                   ? Vector3.Lerp( transform.position, targetPosition, smoothSpeed * Time.deltaTime )
+			                   ? Vector3.Lerp( transform.position, targetPosition,
+				                   smoothSpeed * Time.fixedUnscaledDeltaTime )
 			                   : targetPosition;
 
 		position.y = Mathf.Max( position.y, -2.93f ); // magic number because of specific lower grid end
