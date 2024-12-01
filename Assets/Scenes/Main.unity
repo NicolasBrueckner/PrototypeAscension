@@ -5872,7 +5872,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3070174716743767025, guid: edbdc44b99953484982ff00098a280b6, type: 3}
       propertyPath: m_PointLightOuterRadius
-      value: 16
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 3070174716743767025, guid: edbdc44b99953484982ff00098a280b6, type: 3}
       propertyPath: m_LocalBounds.m_Center.y
