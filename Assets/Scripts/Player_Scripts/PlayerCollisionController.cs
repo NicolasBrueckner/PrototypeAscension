@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using static Utility;
 
@@ -76,7 +76,7 @@ public class PlayerCollisionController : MonoBehaviour
 		_isColliding = false;
 	}
 
-	private async Task HandleCollision( Collision2D collision, PlayerStateData data )
+	private async UniTask HandleCollision( Collision2D collision, PlayerStateData data )
 	{
 		RuntimeEventManager.OnStateChanged( data.state );
 
@@ -111,18 +111,18 @@ public class PlayerCollisionController : MonoBehaviour
 		_rb2D.AddForce( normal * 0.2f, ForceMode2D.Impulse );
 	}
 
-	private async Task HoldIndefinitely()
+	private async UniTask HoldIndefinitely()
 	{
 		while( _isHolding )
-			await Task.Yield();
+			await UniTask.Yield();
 	}
 
-	private async Task HoldForDuration( float duration )
+	private async UniTask HoldForDuration( float duration )
 	{
 		float timer = duration;
 		while( _isHolding && timer > 0.0f )
 		{
-			await Task.Delay( TimeSpan.FromSeconds( Time.fixedDeltaTime ) );
+			await UniTask.Delay( TimeSpan.FromSeconds( Time.fixedDeltaTime ) );
 			timer -= Time.fixedDeltaTime;
 		}
 	}
