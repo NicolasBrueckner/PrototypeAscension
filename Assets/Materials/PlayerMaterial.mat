@@ -57,7 +57,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _DissolveFactor: 0.677
+    - _DissolveFactor: 1
     - _DissolveScale: 25
     - _EmissionFactor: 0.5
     - _EmissionStrength: 0.5
