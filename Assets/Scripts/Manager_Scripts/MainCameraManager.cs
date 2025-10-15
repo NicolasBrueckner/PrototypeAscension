@@ -38,7 +38,7 @@ public class MainCameraManager : MonoBehaviour
 
 	private void FollowTarget()
 	{
-		Vector3 targetPosition = new( transform.position.x, targetTransform.position.y, offset );
+		Vector3 targetPosition = new( transform.position.x, targetTransform.position.y + 3, offset );
 
 		Vector3 position = smoothSpeed > 0
 			                   ? Vector3.MoveTowards( transform.position, targetPosition,
